@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wordle Lobby</title>
+    <script language="javascript" type="text/javascript" src="script.js"></script>
+
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .container { max-width: 400px; margin: 0 auto; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        input { padding: 8px; margin: 5px; width: 200px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Wordle Lobby</h1>
+    <button onclick="createLobby()">Create Lobby</button>
+    <button onclick="showJoinForm()">Join Lobby</button>
+
+    <div id="joinForm" style="display: none;">
+        <input type="text" id="lobbyId" placeholder="Lobby ID">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="joinLobby()">Join</button>
+    </div>
+</div>
+
+</body>
+</html>
