@@ -2,6 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Server.iml" filepath="$PROJECT_DIR$/Server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Server.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Server.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Server.test.iml" filepath="$PROJECT_DIR$/.idea/modules/Server.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/WebEngineeringWordle.iml" filepath="$PROJECT_DIR$/.idea/WebEngineeringWordle.iml" />
     </modules>
   </component>
