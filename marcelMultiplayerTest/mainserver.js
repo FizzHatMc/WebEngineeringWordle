@@ -17,7 +17,7 @@ const subServers = {}; // Keep track of sub-server processes
 app.use(express.static(path.join(__dirname)));
 
 app.get('/', function(request, response) {
-    response.sendFile(path.join(__dirname, 'lobby.html'));
+    response.sendFile(__dirname + "/lobby.html");
 });
 
 // Route for creating a new game (now starts a sub-server)
@@ -76,11 +76,6 @@ app.get('/join-game', (req, res) => {
     }
 
     res.json({ status: 'joined', port: lobbies[gameId].subServerPort }); //also send the port
-});
-
-io.on('connection', (socket) => {
-    //moved game logic to subserver.js
-
 });
 
 server.listen(PORT, () => {

@@ -26,12 +26,6 @@ const game = {
     players: [], // Each player object will have { id, name, guesses[] }
     word: generateWord(),
     gameOver: false,
-    // The 'board' in game.html represents a single player's view or a consolidated view.
-    // On the server, 'guesses' is managed per player.
-    // We'll manage a consolidated 'globalBoard' for display consistency
-    // or just rely on individual player.guesses for sending updates.
-    // For now, let's keep player.guesses and pass that directly.
-    // We need to keep a record of all submitted words by all players for the submitted-words list
     submittedWords: [] // Stores { word: "GUESS", player: "PlayerName" }
 };
 

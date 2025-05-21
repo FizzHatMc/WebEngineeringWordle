@@ -5,228 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Multiplayer Wordle Lobby</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            font-family: 'Press Start 2P', monospace;
-            background-color: #111827; /* Dark background */
-            color: #f9fafb; /* Light text */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            width: 100%;
-            max-width: 600px; /* Increased max-width for larger screens */
-            text-align: center;
-            padding: 2rem;
-            background-color: #1f2937; /* Slightly lighter container background */
-            border-radius: 0.75rem; /* Rounded corners */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Shadow for depth */
-            border: 1px solid #374151; /* Add a border */
-        }
-        h1 {
-            font-size: 2rem; /* Larger heading */
-            margin-bottom: 1.5rem;
-            color: #6366f1; /* Vibrant purple */
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Text shadow */
-        }
-        p {
-            font-size: 0.8rem; /* Increased font size */
-            margin-bottom: 1rem;
-            color: #d1d5db;
-        }
-        #name-input, #game-id-input {
-            padding: 0.7rem; /* Increased padding */
-            font-size: 0.9rem; /* Increased font size */
-            border: 1px solid #4b5563; /* Darker border */
-            border-radius: 0.5rem; /* Rounded corners */
-            margin: 0.5rem auto; /* Center the input */
-            width: 100%; /* Full width */
-            max-width: 300px; /* Maximum width */
-            background-color: #f3f4f6; /* Light background for input */
-            color: #1f2937; /* Dark text for input */
-        }
-        #name-input:focus, #game-id-input:focus {
-            outline: none;
-            border-color: #6366f1; /* Purple focus border */
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5); /* Focus shadow */
-        }
-        #create-game, #join-game {
-            padding: 0.8rem 1.6rem; /* Increased padding */
-            font-size: 0.9rem; /* Increased font size */
-            margin: 0.5rem;
-            cursor: pointer;
-            background-color: #4caf50; /* Green */
-            color: white;
-            border: none;
-            border-radius: 0.5rem; /* Rounded corners */
-            transition: background-color 0.3s ease; /* Smooth transition */
-            width: 100%; /* Full width */
-            max-width: 300px; /* Maximum width for buttons */
-            display: block; /* Make buttons block elements */
-            margin-left: auto;
-            margin-right: auto;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Add shadow */
-            text-align: center;
-        }
-        #create-game:hover, #join-game:hover {
-            background-color: #45a049; /* Darker green */
-        }
 
-        .error-message {
-            color: #dc2626;
-            font-size: 0.8rem;
-            margin-top: 0.5rem;
-            text-align: center;
-        }
-        #instructions {
-            margin-top: 2rem;
-            padding: 1.5rem;
-            border: 1px solid #4b5563;
-            border-radius: 0.75rem;
-            background-color: #242424;
-            text-align: left;
-            font-size: 0.8rem;
-            line-height: 1.5;
-        }
-
-        #instructions h2 {
-            font-size: 1.2rem;
-            color: #f5f5f5;
-            margin-bottom: 1rem;
-            font-weight: bold;
-        }
-
-        #instructions ul {
-            list-style-position: inside;
-            margin-left: 0;
-            padding-left: 0;
-        }
-
-        #instructions li {
-            margin-bottom: 0.5rem;
-        }
-        @media (max-width: 640px) {
-            .container {
-                padding: 1.5rem;
-            }
-            h1 {
-                font-size: 1.75rem;
-            }
-            p {
-                font-size: 0.7rem;
-            }
-            #create-game, #join-game {
-                font-size: 0.8rem;
-                padding: 0.7rem 1.4rem;
-            }
-            #name-input, #game-id-input {
-                font-size: 0.8rem;
-                padding: 0.6rem;
-            }
-            #instructions {
-                font-size: 0.7rem;
-                padding: 1rem;
-            }
-            #instructions h2{
-                font-size: 1rem;
-            }
-        }
-    </style>
 </head>
 <body class="bg-gray-900 text-gray-50">
+
 <div class="container">
     <h1>Multiplayer Wordle</h1>
     <p>Create a new game or join an existing one to play Wordle with friends!</p>
 
-    <input type="text" id="name-input" placeholder="Enter your Name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-    <button id="create-game" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Create Game</button>
-    <input type="text" id="game-id-input" placeholder="Enter Game ID to Join" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-    <button id="join-game" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Join Game</button>
+    <input type="text" id="name-input" placeholder="Enter your Name">
+    <button id="create-game" onclick="createGame()">Create Game</button>
+    <input type="text" id="game-id-input" placeholder="Enter Game ID to Join" >
+    <button id="join-game" onclick="joinGame()">Join Game</button>
 
     <div id="error-message" class="error-message"></div>
 
-    <div id="instructions">
-        <h2>How to Play</h2>
-        <ul>
-            <li><strong>Enter Your Name:</strong>  Enter your name in the "Your Name" input box.  This name will be displayed to other players.</li>
-            <li><strong>Create a Game:</strong> Click "Create Game" to start a new Wordle game and get a unique Game ID.</li>
-            <li><strong>Join a Game:</strong> Enter a Game ID in the input box and click "Join Game" to join an existing game.</li>
-            <li><strong>Share the Game ID:</strong> If you create a game, share the Game ID with your friends so they can join.</li>
-            <li><strong>Play Wordle:</strong> Once you're in a game, you'll play the classic Wordle game with other players.</li>
-            <li><strong>Guesses are Shared:</strong> All players in the game share the same Wordle board.  Your guesses will appear for everyone.</li>
-            <li><strong>Win Together:</strong> The game ends when someone guesses the word correctly.  Everyone in the game wins!</li>
-        </ul>
-    </div>
 </div>
-<script>
-    const createGameButton = document.getElementById('create-game');
-    const joinGameButton = document.getElementById('join-game');
-    const gameIdInput = document.getElementById('game-id-input');
-    const nameInput = document.getElementById('name-input');
-    const errorMessageDisplay = document.getElementById('error-message');
+<script src="lobbyscript.js"></script>
 
-    function showError(message) {
-        errorMessageDisplay.textContent = message;
-    }
-
-    function navigateToGame(gameId, port, playerName) {
-        // Use relative path and include the port and player name
-        window.location.href = `game.html?id=${gameId}&port=${port}&name=${encodeURIComponent(playerName)}`;
-    }
-
-    createGameButton.addEventListener('click', () => {
-        const playerName = nameInput.value.trim();
-        if (!playerName) {
-            showError('Please enter your name.');
-            return;
-        }
-        // Use relative path
-        fetch('/create-game')
-            .then(response => response.json())
-            .then(data => {
-                if (data.gameId && data.port) {
-                    navigateToGame(data.gameId, data.port, playerName);
-                } else {
-                    showError('Failed to create game. Please try again.');
-                }
-            })
-            .catch(error => {
-                console.error('Error creating game:', error);
-                showError('An error occurred. Please check your network connection.');
-            });
-    });
-
-    joinGameButton.addEventListener('click', () => {
-        const gameId = gameIdInput.value.trim();
-        const playerName = nameInput.value.trim();
-        if (!playerName) {
-            showError('Please enter your name.');
-            return;
-        }
-        if (!gameId) {
-            showError('Please enter a Game ID.');
-            return;
-        }
-        // Use relative path
-        fetch(`/join-game?id=${gameId}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'joined') {
-                    navigateToGame(gameId, data.port, playerName);
-                } else {
-                    showError(data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error joining game:', error);
-                showError('An error occurred. Please check your network connection.');
-            });
-    });
-</script>
 </body>
 </html>
