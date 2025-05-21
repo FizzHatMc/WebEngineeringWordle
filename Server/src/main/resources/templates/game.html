@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>Game</title>
@@ -33,39 +33,15 @@
         }
 
         .tilecorrect {
-            width: 50px;
-            height: 50px;
             background-color: #6aaa64;
-            border: 2px solid #ccc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            text-transform: uppercase;
         }
 
         .tilepresent {
-            width: 50px;
-            height: 50px;
             background-color: #c9b458;
-            border: 2px solid #ccc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            text-transform: uppercase;
         }
 
         .tileabsent {
-            width: 50px;
-            height: 50px;
             background-color: #787c7e;
-            border: 2px solid #ccc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            text-transform: uppercase;
         }
 
         .keyboard {
@@ -149,10 +125,10 @@
                         for (let col = 0; col < 5; col++) {
                             const tile = document.createElement('div');
                             tile.textContent = letterArray[row][col];
+                            tile.classList.add('tile');
                             if (colorArray[row][col] == 1) tile.classList.add('tileabsent');
                             if (colorArray[row][col] == 2) tile.classList.add('tilepresent');
                             if (colorArray[row][col] == 3) tile.classList.add('tilecorrect');
-                            if (colorArray[row][col] == 0) tile.classList.add('tile');
                             board.appendChild(tile);
                         }
                     }

@@ -14,11 +14,16 @@ import java.net.http.HttpClient;
 
 @Controller
 public class WebController {
-    @GetMapping("/test")
-    public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name, Model model) {
-        model.addAttribute("name", name);
-        model.addAttribute("wort","wort");
-        return "test";
+    String currentWord=WordHandler.getRandomWord();
+
+    @GetMapping("/reset")
+    public String reset(){
+        currentWord=WordHandler.getRandomWord();
+        return "home";
+    }
+    @GetMapping("/impressum")
+    public String impressum(){
+        return "impressum";
     }
 
     @GetMapping("/")
@@ -36,8 +41,8 @@ public class WebController {
         if(word.length()==5) {
             int[] colors = new int[5];
             for (int i = 0; i < 5; i++) {
-                if ("Milch".toLowerCase().contains(String.valueOf(word.toLowerCase().charAt(i)))) {
-                    if ("Milch".toLowerCase().charAt(i) == word.toLowerCase().charAt(i)) {
+                if (currentWord.toLowerCase().contains(String.valueOf(word.toLowerCase().charAt(i)))) {
+                    if (currentWord.toLowerCase().charAt(i) == word.toLowerCase().charAt(i)) {
                         colors[i] = 3;
                     } else {
                         colors[i] = 2;
