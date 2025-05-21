@@ -8,6 +8,7 @@ Was der Mainserver Managen muss (Jonas)
 - Lobby beitreten (speicher z.b lokal welche lobbies offen sind, werde kreativ)
 - Random wort erstellen/grabben
 
+
 Interfaces die der Subserver benötigt vom Frontend/Logik (Jonathan, Kilian)
 - Im game -> Submit knopf (schickt 'guess', {gameId, guess, playerName}
 -> bspl : socket.emit('guess', { gameId, guess, playerName });
