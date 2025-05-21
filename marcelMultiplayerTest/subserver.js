@@ -24,16 +24,13 @@ if (!gameId || !PORT) {
 // Game state for this specific sub-server (lobby)
 const game = {
     players: [], // Each player object will have { id, name, guesses[] }
-    word: generateWord(),
+    word: process.argv[4] || "nulll",
     gameOver: false,
     submittedWords: [] // Stores { word: "GUESS", player: "PlayerName" }
 };
 
 // Function to generate a random 5-letter word
-function generateWord() {
-    const words = ['apple', 'baker', 'chair', 'dance', 'early', 'fable', 'gamer', 'happy', 'igloo', 'jumbo', 'kiosk', 'lemon', 'magic', 'noble', 'ocean', 'piano', 'quick', 'rider', 'sable', 'table', 'uncle', 'video', 'waltz', 'xenon', 'yacht', 'zebra'];
-    return words[Math.floor(Math.random() * words.length)].toUpperCase();
-}
+
 
 io.on('connection', (socket) => {
     console.log(`Player ${socket.id} connected to game ${gameId} on port ${PORT}`);
@@ -90,7 +87,8 @@ io.on('connection', (socket) => {
         });
     });
 
-    socket.on('guess', ({ gameId, guess, playerName }) => { // Expect playerName
+    socket.on('guess', async ({gameId, guess, playerName}) => { // Expect playerName
+        console.log(game.word)
         if (!gameId) {
             socket.emit('message', 'Game not found.');
             return;
@@ -113,7 +111,7 @@ io.on('connection', (socket) => {
         player.guesses.push(currentGuess);
 
         // Add to the global submitted words list
-        game.submittedWords.push({ word: currentGuess, player: playerName });
+        game.submittedWords.push({word: currentGuess, player: playerName});
 
         // Emit updated board for THIS player, and the submitting player's name
         io.to(gameId).emit('update-board', {
@@ -121,22 +119,30 @@ io.on('connection', (socket) => {
             playerName: playerName // Send the name of the player who made the guess
         });
 
+        // In subserver.js
+// ...
+        setTimeout(async () => {
+            console.log(`Sub-server ${gameId}: Requesting word check for "milch"`);
+            try {
+                const result = await sendReq('/wordcheck', { word: 'milch' }); // <-- THIS MUST BE '/wordcheck'
+                console.log(`Sub-server ${gameId} received wordcheck result for "milch":`, result);
+                // ...
+            } catch (error) {
+                console.error(`Sub-server ${gameId} wordcheck for "milch" failed:`, error);
+            }
+        }, 6000); // Or whatever timeout value you have
+
 
         // Check for win condition
         if (currentGuess === game.word) {
             game.gameOver = true;
-            io.to(gameId).emit('game-over', { isWin: true, word: game.word, winner: playerName }); // Added winner
+            io.to(gameId).emit('game-over', {isWin: true, word: game.word, winner: playerName}); // Added winner
             console.log(`Player ${playerName} (${socket.id}) won game ${gameId}`);
         } else if (player.guesses.length >= 6) { // Check if player ran out of guesses
-            // This is a player-specific loss, not necessarily game over for everyone
-            // For multiplayer, you might want to handle this differently (e.g., all players lose
-            // if no one guesses it in 6 rounds, or individual players are out).
-            // For simplicity, let's make it a global game over if one player exhausts guesses
-            // and no one has won yet. You can refine this.
             let allPlayersGuessedMax = game.players.every(p => p.guesses.length >= 6);
             if (!game.gameOver && allPlayersGuessedMax) {
                 game.gameOver = true;
-                io.to(gameId).emit('game-over', { isWin: false, word: game.word });
+                io.to(gameId).emit('game-over', {isWin: false, word: game.word});
                 console.log(`All players exhausted guesses in game ${gameId}`);
             }
         }
@@ -185,6 +191,50 @@ io.on('connection', (socket) => {
         }
     });
 });
+
+async function sendReq(requestType, data) {
+    const postData = JSON.stringify({ gameId, ...data });
+    const url = new URL("http://localhost:3000");
+
+    const options = {
+        hostname: url.hostname,
+        port: url.port || (url.protocol === 'https:' ? 443 : 80),
+        path: requestType, // The specific endpoint, e.g., '/wordcheck'
+        method: 'POST', // Assuming most requests will be POST with data
+        headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(postData),
+        },
+    };
+
+    return new Promise((resolve, reject) => {
+        const req = http.request(options, (res) => {
+            let rawData = '';
+            res.setEncoding('utf8');
+            res.on('data', (chunk) => {
+                rawData += chunk;
+            });
+            res.on('end', () => {
+                try {
+                    const parsedData = JSON.parse(rawData);
+                    console.log(`Sub-server ${gameId} received response from ${requestType}:`, parsedData);
+                    resolve(parsedData);
+                } catch (e) {
+                    console.error(`Sub-server ${gameId} error parsing response from ${requestType}: ${e.message}`);
+                    reject(new Error(`Failed to parse response: ${rawData}`));
+                }
+            });
+        });
+
+        req.on('error', (e) => {
+            console.error(`Sub-server ${gameId} problem with request to ${requestType}: ${e.message}`);
+            reject(e);
+        });
+
+        req.write(postData);
+        req.end();
+    });
+}
 
 server.listen(PORT, () => {
     console.log(`Sub-server for game ${gameId} is running on http://localhost:${PORT}`);
