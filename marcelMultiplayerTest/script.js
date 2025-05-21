@@ -1,16 +1,3 @@
-const socket = io(`http://lobby-server-ip:PORT`, { query: { token: 'MAIN_SERVER_TOKEN' } });
-
-// Send guess to server
-function submitGuess(guess) {
-    socket.emit('submit-guess', guess);
-}
-
-// Listen for updates
-socket.on('update', (guesses) => {
-    updateUI(guesses);
-});
-
-
 
 function createLobby() {
     fetch('/create-lobby', {
