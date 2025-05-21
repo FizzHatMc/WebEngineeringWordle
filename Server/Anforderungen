@@ -1,5 +1,5 @@
 Interfaces die der Subserver benötigt vom Mainserver (Jonas)
-- einen post('/wordCheck')
+- einen post('/try/{word}')
 - post('/getNewWord')
 - beim erstellen diese Argumente (gameId, Port, Name)
 
@@ -13,5 +13,7 @@ Interfaces die der Subserver benötigt vom Frontend/Logik (Jonathan, Kilian)
 - Im game -> Submit knopf (schickt 'guess', {gameId, guess, playerName}
 -> bspl : socket.emit('guess', { gameId, guess, playerName });
 - script.js vom frontend handled die logik für die länge des wortes
+
+
 
 
