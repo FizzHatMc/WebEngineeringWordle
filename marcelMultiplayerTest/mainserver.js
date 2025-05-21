@@ -39,17 +39,20 @@ app.get('/create-game', (req, res) => {
         port: subServerPort,
     };
 
-    subProcess.stdout.on('data', (data) => {
-        console.log(`Sub-process stdout: ${data}`);  //  <--  Capture stdout
-    });
 
-    subProcess.stderr.on('data', (data) => {
-        console.error(`Sub-process stderr: ${data}`); //  <--  Capture stderr
-    });
-
-    subProcess.on('close', (code) => {
-        console.log(`Sub-process exited with code ${code}`);
-    });
+    /**
+     * subProcess.stdout.on('data', (data) => {
+     *         console.log(`Sub-process stdout: ${data}`);  //  <--  Capture stdout
+     *     });
+     *
+     *     subProcess.stderr.on('data', (data) => {
+     *         console.error(`Sub-process stderr: ${data}`); //  <--  Capture stderr
+     *     });
+     *
+     *     subProcess.on('close', (code) => {
+     *         console.log(`Sub-process exited with code ${code}`);
+     *     });
+     */
 
     lobbies[gameId] = {
         players: [],
@@ -85,7 +88,7 @@ app.post('/wordcheck', (req, res) => {
     console.log(`Main server received word check request for game ${gameId} with word: "${word}" -> Correct word: "${lobbies[gameId].word}"`);
 
     // --- Simulate word processing logic ---
-    const result = false
+    const result = word === lobbies[gameId].word
     // --- End simulation ---
 
     // Send the response back to the sub-server
