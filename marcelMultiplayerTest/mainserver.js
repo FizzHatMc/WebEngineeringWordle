@@ -27,6 +27,7 @@ app.get('/create-game', (req, res) => {
     const newWord = generateWord()
     const subServerPort = 4000 + Object.keys(subServers).length; // Simple port assignment
     // Start the sub-server as a separate Node.js process
+
     const subProcess = spawn('node', ['subserver.js', gameId, subServerPort, newWord]);
 
     if (!subProcess) {

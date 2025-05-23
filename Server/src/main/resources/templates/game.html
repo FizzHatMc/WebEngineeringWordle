@@ -73,8 +73,9 @@
 </div>
 <div id="arrayDisplay"></div>
 
-<button onclick="tryWord()">Submit</button>
-<input type="text" id="guess">
+    <div><label> Your guess: <input type="text" onchange="tryWord()" name="guess" id="guess"/> </label></div>
+    <div><input type="button" value="Submit" onclick="tryWord()"/></div>
+</form>
 
 <script>
     const rows = 8;

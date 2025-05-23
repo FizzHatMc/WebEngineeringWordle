@@ -124,7 +124,7 @@ io.on('connection', (socket) => {
         setTimeout(async () => {
             console.log(`Sub-server ${gameId}: Requesting word check for "milch"`);
             try {
-                const result = await sendReq('/wordcheck', { word: 'milch' }); // <-- THIS MUST BE '/wordcheck'
+                const result = await sendReq('/wordcheck', { word: 'milch' }); // <-- THIS MUST BE '/try/{word}/{correct word}' or 'try/{word}/try-daily'
                 console.log(`Sub-server ${gameId} received wordcheck result for "milch":`, result);
                 // ...
             } catch (error) {
