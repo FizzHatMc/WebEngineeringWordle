@@ -5,9 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,6 +44,7 @@ public class WebController {
     public String home() {
         return "home";
     }
+
     @GetMapping("/lobby")
     public String lobby() {
         return "lobby";
@@ -73,6 +72,7 @@ public class WebController {
                     .exec(String.format("/bin/sh -c ls %s", "homeDirectory"));
         }
         subservers.put(gameId, new GameLobby(gameId, subServerPort));
+        subservers.get(gameId).joinRequest();
         log.debug("server {} started on port {}",gameId,subServerPort);
 
         return ResponseEntity.ok(("{\"gameId\" : \""+gameId+"\" , \"port\" : \""+subServerPort+"\"}"));
@@ -83,8 +83,16 @@ public class WebController {
     }
 
     @GetMapping("/join-game")
-    public String join_game() {
-        return "game";
+    public ResponseEntity<String> join_game(@RequestParam(name="id" ,required=true) String id) {
+        String status="";
+        String message="";
+        if(subservers.get(id)!=null){
+            if(subservers.get(id).joinRequest()){
+                return ResponseEntity.ok(("{\"status\" : \"joined\" , \"message\" : \""+subservers.get(id).port+"\"}"));
+            }
+            return ResponseEntity.status(400).body("{ status: 'error', message: 'Game is full' }");
+        }
+        return ResponseEntity.status(404).body("{ status: 'error', message: 'Game not found' }");
     }
 
     @GetMapping("/login")

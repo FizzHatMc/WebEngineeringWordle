@@ -1,9 +1,9 @@
 package de.dhbwka.java.exercise.packages;
 
 public class GameLobby {
-    private final String id;
-    private final int port;
-    private String[] players=new String[6];//maximal 6 Spieler
+    public final String id;
+    public final int port;
+    private int players=0;//maximal 6 Spieler
     private String currentWord;
 
     public GameLobby(String id, int port){
@@ -11,23 +11,16 @@ public class GameLobby {
         this.port = port;
     }
 
-    public boolean joinRequest(String playerName){
-        for (int i = 0; i < players.length; i++) {
-            if(players[i].isEmpty()){
-                players[i]=playerName;
+    public boolean joinRequest(){
+            if(players<6){
+                players++;
                 return true;
             }
-        }
         return false;
     }
 
-    public boolean leaveRequest(String playerName){
-        for (int i = 0; i < players.length; i++) {
-            if(players[i].equals(playerName)){
-                players[i]="";
-                return true;
-            }
-        }
-        return false;
+    public boolean leaveRequest(){
+        players--;
+        return true;
     }
 }

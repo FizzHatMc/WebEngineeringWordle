@@ -15,6 +15,9 @@ Interfaces die der Subserver benötigt vom Frontend/Logik (Jonathan, Kilian)
 
 Was der Main Server (WebController) von den Subservern braucht:
 - Nachricht, wenn der Subserver gelöscht werden kann
+- Schnittstellen sind in WebController.java zu finden
+
+Subserver startet aus irgendeinem Grund nicht auf dem richtigen Port / Socket
 
 
 
