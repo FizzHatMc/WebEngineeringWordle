@@ -13,6 +13,7 @@ const gameOverMessage = document.getElementById('game-over-message');
 const newGameButton = document.getElementById('new-game-button');
 const playerListElement = document.getElementById('player-list');
 const wordListElement = document.getElementById('word-list');
+const toggle = document.getElementById('dailySwitch');
 
 const MAX_GUESSES = 6;
 const WORD_LENGTH = 5;
@@ -26,6 +27,7 @@ let isGameOver = false;
 let playerId = '';
 let players = [];
 let submittedWords = [];
+let isDaily = true
 
 function createBoard() {
     board = [];
@@ -64,28 +66,10 @@ function renderBoard() {
             tileInner.className = 'tile-inner';
             tileInner.textContent = letter.trim(); // Trim to not show spaces in tiles
 
-            // Apply styling only for words that have been submitted (past rows)
-            // Or for the current row if it's a submitted word from another player
-            // The current player's *active typing* is handled by textInput.value
-            // This logic is a bit tricky with multiplayer.
-            // We apply styling if the word is fully submitted OR it's a past row.
-            // For the current row, we only apply styling if the word has been
-            // submitted (i.e., its length is WORD_LENGTH) AND it's not the current player's
-            // active typing (handled by the input field itself).
-            // A simpler approach for the client is to only style fully submitted words (wordIndex < currentRow).
-            // The current input is reflected in the text input, not necessarily on the board tiles yet.
-
-            // Refined styling logic for renderBoard:
-            // Only apply styling to rows that are 'locked in' (i.e., submitted)
-            // This means words from `board` that are fully entered and are not the 'current' active row
-            // Or if it's the current row, but it's a complete word (from another player's guess)
             const isSubmittedWord = (word.length === WORD_LENGTH && wordIndex < currentRow);
             const isCurrentPlayerTypingRow = (wordIndex === currentRow && currentGuess.length < WORD_LENGTH);
 
 
-            // This is where we need the actual solution word to determine correct/present/absent.
-            // The `solutionWord` is only available when `game-start` is emitted.
-            // This `renderBoard` function needs `solutionWord` to be set globally or passed in.
             if (solutionWord && (isSubmittedWord || (wordIndex === currentRow && word.length === WORD_LENGTH))) {
                 const letterUpper = letter.toUpperCase();
                 const solutionUpper = solutionWord.toUpperCase();
@@ -191,6 +175,10 @@ function resetGame() {
     renderBoard(); // Ensure the board is rendered when resetting.
 }
 
+function changeDailyState(check){
+    socket.emit('dailyState', {check});
+}
+
 function updateSubmittedWords(newWord, playerName) {
     submittedWords.push({ word: newWord, player: playerName });
     const li = document.createElement('li');
@@ -201,7 +189,19 @@ function updateSubmittedWords(newWord, playerName) {
 
 newGameButton.addEventListener('click', resetGame);
 submitButton.addEventListener('click', handleGuessSubmit);
-textInput.addEventListener('input', updateCurrentGuessDisplay); // Listen for input changes
+textInput.addEventListener('input', updateCurrentGuessDisplay);// Listen for input changes
+toggle.addEventListener('change', () => {
+    if (toggle.checked) {
+        console.log("Slider -> " + toggle.checked)
+        document.getElementById("p1").innerText= toggle.checked + "!"
+        changeDailyState(true)
+    } else {
+        console.log("Slider -> " + toggle.checked)
+        changeDailyState(false)
+    }
+});
+
+
 
 socket.on('connect', () => {
     playerId = socket.id;
