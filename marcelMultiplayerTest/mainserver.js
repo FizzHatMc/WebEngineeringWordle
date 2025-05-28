@@ -41,19 +41,18 @@ app.get('/create-game', (req, res) => {
     };
 
 
-    /**
-     * subProcess.stdout.on('data', (data) => {
-     *         console.log(`Sub-process stdout: ${data}`);  //  <--  Capture stdout
-     *     });
-     *
-     *     subProcess.stderr.on('data', (data) => {
-     *         console.error(`Sub-process stderr: ${data}`); //  <--  Capture stderr
-     *     });
-     *
-     *     subProcess.on('close', (code) => {
-     *         console.log(`Sub-process exited with code ${code}`);
-     *     });
-     */
+
+      subProcess.stdout.on('data', (data) => {
+              console.log(`Sub-process stdout: ${data}`);  //  <--  Capture stdout
+          });
+
+          subProcess.stderr.on('data', (data) => {
+              console.error(`Sub-process stderr: ${data}`); //  <--  Capture stderr
+          });
+
+          subProcess.on('close', (code) => {
+              console.log(`Sub-process exited with code ${code}`);
+         });
 
     lobbies[gameId] = {
         players: [],

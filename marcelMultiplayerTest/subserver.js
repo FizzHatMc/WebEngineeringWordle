@@ -24,12 +24,10 @@ if (!gameId || !PORT) {
 // Game state for this specific sub-server (lobby)
 const game = {
     players: [], // Each player object will have { id, name, guesses[] }
-    word: process.argv[4] || "nulll",
+    word: process.argv[4] || "null",
     gameOver: false,
     submittedWords: [] // Stores { word: "GUESS", player: "PlayerName" }
 };
-
-// Function to generate a random 5-letter word
 
 
 io.on('connection', (socket) => {
@@ -43,15 +41,12 @@ io.on('connection', (socket) => {
 
         const existingPlayer = game.players.find(p => p.id === socket.id);
         if (existingPlayer) {
-            // Player is rejoining or already joined
             socket.emit('message', 'You are already in this game.');
-            // Send current game state to the rejoining player
             socket.emit('game-start', {
                 word: game.word,
                 players: game.players,
                 board: existingPlayer.guesses // Send their current guesses as their board
             });
-            // Update submitted words list for the joining player
             game.submittedWords.forEach(sw => {
                 socket.emit('update-board', { board: sw.word, playerName: sw.player }); // Re-send each submitted word
             });
@@ -120,18 +115,32 @@ io.on('connection', (socket) => {
         });
 
         // In subserver.js
-// ...
+
+        setTimeout(async  () => {
+            try {
+                if(isDaily){
+                    const result = await fetch(`/try/${currentGuess}/try-daily`)
+                }else{
+                    const result = await fetch(`/try/${currentGuess}/${game.word}`)
+
+                }
+            }catch (error){
+                console.log('ERROR Line 133')
+            }
+        }, 100)
+
+        /*
         setTimeout(async () => {
             console.log(`Sub-server ${gameId}: Requesting word check for "milch"`);
             try {
-                const result = await sendReq('/wordcheck', { word: currentGuess }); // <-- THIS MUST BE '/wordcheck'
+                const result = await sendReq('/try', { word: currentGuess }); // <-- THIS MUST BE '/wordcheck'
                 console.log(`Sub-server ${gameId} received wordcheck result for "milch":`, result);
                 // ...
             } catch (error) {
                 console.error(`Sub-server ${gameId} wordcheck for "milch" failed:`, error);
             }
         }, 100); // Or whatever timeout value you have
-
+*/
 
         // Check for win condition
         /*
@@ -156,6 +165,7 @@ io.on('connection', (socket) => {
             return;
         }
 
+        /*
         setTimeout(async () => {
             try {
                 game.word = await sendReq('/getNewWord'); // <-- THIS MUST BE '/wordcheck'
@@ -163,6 +173,7 @@ io.on('connection', (socket) => {
                 console.error(`Sub-server async test Failed`, error);
             }
         }, 100);
+         */
 
         game.gameOver = false;
         game.submittedWords = []; // Clear submitted words for new game
