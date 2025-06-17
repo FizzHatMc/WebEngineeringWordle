@@ -52,7 +52,7 @@ public class WebController {
 
     @GetMapping("/game")
     public String game() {
-        return "game";
+        return "game_";
     }
 
     @GetMapping("/create-game")
