@@ -2,19 +2,20 @@ const express = require('express');
 const { v4: uuidv4 } = require('uuid');
 const { Server } = require('socket.io');
 const http = require('http');
+const path = require('path'); // Add this line
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "*",  // Allow all origins
+        origin: "*",
         methods: ["GET", "POST"]
     }
 });
 
-const gameId = process.argv[2] || 1; // Get gameId from command line
-const PORT = parseInt(process.argv[3], 10) || 4000; // Get port from command line
-const correctWord = process.argv[4]
+const gameId = process.argv[2] || 1;
+const PORT = parseInt(process.argv[3], 10) || 4000;
+const correctWord = process.argv[4];
 
 if (!gameId || !PORT || !correctWord) {
     console.error('Sub-server requires gameId, PORT and CorrectWord arguments.');
@@ -26,8 +27,28 @@ const gameData = {
     word: correctWord,
     gameOver: false,
     submittedWords: [],
-    port : PORT
+    port: PORT
 }
+
+// Serve static files from the same directory
+app.use(express.static(path.join(__dirname)));
+
+// Handle /game route
+app.get('/game', (req, res) => {
+    res.sendFile(path.join(__dirname, 'game.html'), (err) => {
+        if (err) {
+            console.error('Error sending game.html:', err);
+            res.status(500).send('Error loading game page');
+        }
+    });
+});
+
+// Start server
+server.listen(PORT, () => {
+    console.log(`Game server ${gameId} running on port ${PORT}`);
+    console.log(`Game word: ${correctWord}`);
+});
+
 
 io.on('connection', (socket) => {
     console.log(`Player ${socket.id} connected to game ${gameId} on port ${PORT}`);
@@ -133,6 +154,7 @@ io.on('connection', (socket) => {
             });
         }
     });
+
 });
 
 async function sendReq(requestType, data) {

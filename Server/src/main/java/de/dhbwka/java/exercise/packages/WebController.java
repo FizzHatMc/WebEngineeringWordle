@@ -65,6 +65,7 @@ public class WebController {
                 .toLowerCase().startsWith("windows");
         Process process;
         if (isWindows) {
+            System.out.println("System PATH: " + System.getenv("PATH"));
             String command = String.format("node %s" + " " + gameId + " " + subServerPort + " " + newWord, new File("marcelMultiplayerTest/NewSubserver.js").getAbsolutePath());
             process = Runtime.getRuntime()
                     .exec(command);
