@@ -73,8 +73,8 @@
 </div>
 <div id="arrayDisplay"></div>
 
-    <div><label> Your guess: <input type="text" onchange="tryWord()" name="guess" id="guess"/> </label></div>
-    <div><input type="button" value="Submit" onclick="tryWord()"/></div>
+<div><label> Your guess: <input type="text" onchange="tryWord()" name="guess" id="guess"/> </label></div>
+<div><input type="button" value="Submit" onclick="tryWord()"/></div>
 </form>
 
 <script>
@@ -83,6 +83,10 @@
     const colorArray = [];
     const letterArray = [];
     var tries = 0;
+
+    const gameId = new URLSearchParams(window.location.search).get('id');
+    const port = new URLSearchParams(window.location.search).get('port');
+    const playerName = new URLSearchParams(window.location.search).get('name'); // Get player name
 
     for (let i = 0; i < rows; i++) {
         colorArray[i] = []; // Erstelle eine neue Zeile (inneres Array)
@@ -139,9 +143,6 @@
                 })
                 .catch(error => console.error('Fehler beim Abrufen der Daten:', error));
         }
-    }
-    function setLetter(col) {
-
     }
 </script>
 </body>
