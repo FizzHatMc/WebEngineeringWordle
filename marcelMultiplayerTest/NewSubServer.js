@@ -30,24 +30,14 @@ const gameData = {
     port: PORT
 }
 
-// Serve static files from the same directory
-app.use(express.static(path.join(__dirname)));
 
 // Handle /game route
 app.get('/game', (req, res) => {
-    res.sendFile(path.join(__dirname, 'game.html'), (err) => {
-        if (err) {
-            console.error('Error sending game.html:', err);
-            res.status(500).send('Error loading game page');
-        }
-    });
+    res.sendFile(path.join(__dirname, 'game.html'));
 });
 
-// Start server
-server.listen(PORT, () => {
-    console.log(`Game server ${gameId} running on port ${PORT}`);
-    console.log(`Game word: ${correctWord}`);
-});
+
+
 
 
 io.on('connection', (socket) => {
