@@ -65,7 +65,7 @@ public class WebController {
                 .toLowerCase().startsWith("windows");
         Process process;
         if (isWindows) {
-            String command = String.format("node %s" + " " + gameId + " " + subServerPort + " " + newWord, new File("marcelMultiplayerTest/NewSubserver.js").getAbsolutePath());
+            String command = String.format("node %s" + " " + gameId + " " + subServerPort + " " + newWord, new File("templates/NewSubserver.js").getAbsolutePath());
             process = Runtime.getRuntime()
                     .exec(command);
             log.debug("Startet Subserver with command {}",command);
@@ -75,7 +75,7 @@ public class WebController {
         }
         subservers.put(gameId, new GameLobby(gameId, subServerPort));
         subservers.get(gameId).joinRequest();
-        log.debug("server {} started on port {}",gameId,subServerPort);
+        log.info("server {} started on port http://localhost:{}/game",gameId,subServerPort);
 
         return ResponseEntity.ok(("{\"gameId\" : \""+gameId+"\" , \"port\" : \""+subServerPort+"\"}"));
     }

@@ -33,7 +33,7 @@ const gameData = {
 
 // Handle /game route
 app.get('/game', (req, res) => {
-    res.sendFile(path.join(__dirname, 'game.html'));
+    res.sendFile(path.join(__dirname, '/game_.html'));
 });
 
 
@@ -192,5 +192,5 @@ async function sendReq(requestType, data) {
 }
 
 server.listen(PORT, () => {
-    console.log(`Sub-server for game ${gameId} is running on http://localhost:${PORT}`);
+    console.log(`Sub-server for game ${gameId} is running on http://localhost:${PORT}/game`);
 })
