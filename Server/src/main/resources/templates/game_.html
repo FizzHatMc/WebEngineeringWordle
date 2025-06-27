@@ -6,39 +6,42 @@
     <style>
         body {
             font-family: sans-serif;
+        }
+
+        .game {
             display: flex;
-            flex-direction: column; /* Vertikale Anordnung */
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             background-color: #ffffff;
         }
 
-        .icon-bar {
+        ul {
+            list-style-type: none;
             width: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
             background-color: #C7EDE4;
         }
 
-        .icon-bar a {
-            text-align: center; /* Center-align text */
+        li {
             float: left;
-            padding: 10px; /* Add some padding */
-            transition: all 0.3s ease; /* Add transition for hover effects */
-            color: black; /* White text color */
+            horiz-align: center;
         }
 
-        .icon-bar a:hover{
-            background-color: #D5FFF3; /* Add a hover color */
-        }
-
-        a {
+        li a {
+            display: block;
+            color: #672A4E;;
+            text-align: center;
+            padding: 14px 16px;
             text-decoration: none;
         }
 
-        h1 {
-            margin: 0;
+        li a:hover {
+            background-color: #D5FFF3;
         }
-
         .menu {
             width: 35px;
             height: 5px;
@@ -95,16 +98,19 @@
     </style>
 </head>
 <body>
-<div class="icon-bar">
-    <a id="menuicon" href="http://localhost:8080/">
+<section class="navbar">
+<ul>
+    <li><a href="http://localhost:8080/">
         <div class="menu"></div>
         <div class="menu"></div>
         <div class="menu"></div>
-    </a>
-    <a href="http://localhost:8080/">
-        <h1 id="gamename">WORDLE ONLINE</h1>
-    </a>
-</div>
+    </a></li>
+    <li style="float: right; text-align: center"><a href="http://localhost:8080/">
+        WORDLE ONLINE
+    </a></li>
+</ul>
+</section>
+<section class="game">
 <div class="wordle-board">
     <!-- Tiles will be added here -->
 </div>
@@ -115,7 +121,7 @@
     <div><label> Your guess: <input type="text" onchange="tryWord()" name="guess" id="guess"/> </label></div>
     <div><input type="button" value="Submit" onclick="tryWord()"/>
 </div>
-</form>
+</section>
 
 <script>
     const rows = 6;
