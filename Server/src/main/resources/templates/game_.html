@@ -136,12 +136,9 @@
 </div>
 <div id="arrayDisplay"></div>
 
-<div><label> Your guess: <input type="text" onchange="sendGuess()" name="guess" id="guess"/> </label></div>
-<div><input type="button" value="Submit" onclick="sendGuess()"/></div>
-<label class="switch">
-    <input type="checkbox" id="dailyCheck">
-    <span class="slider round"></span>
-</label>
+<div><label> Your guess: <input type="text" onchange="sendGuessHTTP()" name="guess" id="guess"/> </label></div>
+<div><input type="button" value="Submit" onclick="sendGuessHTTP()"/></div>
+<div><input type="checkbox" id="dailyCheck"></div>
 </form>
 <script src="/socket.io/socket.io.js"></script>
 <script>
@@ -152,10 +149,9 @@
     var tries = 0;
 
     const gameId = new URLSearchParams(window.location.search).get('id');
-    const port = new URLSearchParams(window.location.search).get('port');
+    const port = window.location.port;
     const playerName = new URLSearchParams(window.location.search).get('name'); // Get player name
-    var slider = document.getElementById("dailyCheck")
-    const socket = io(`http://localhost:${port+2000}/game/?id=${gameId}`); // Connect to the sub-server
+    var slider = document.getElementById("dailyCheck");
 
     for (let i = 0; i < rows; i++) {
         colorArray[i] = []; // Erstelle eine neue Zeile (inneres Array)
@@ -168,7 +164,7 @@
     const board = document.querySelector('.wordle-board');
     var word = document.getElementById("guess").value;
     // erstellt die Tiles
-    for (let row = 0; row < 8; row++) {
+    for (let row = 0; row < 5; row++) {
         for (let col = 0; col < 5; col++) {
             const tile = document.createElement('div');
             tile.classList.add('tile');
@@ -177,15 +173,87 @@
     }
 
     function sendGuessHTTP() {
-        fetch("http://localhost:"+port+"/guess", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                gameId: "abc",
-                guess: 42,
-                playerName: "Alice"
-            })
-        });
+        word = document.getElementById("guess").value;
+        slider = document.getElementById("dailyCheck")
+        console.log("Word -> " + word )
+
+        if(slider){
+            fetch('http://localhost:8080/try/' + word )
+                .then(response => response.json())
+                .then(data => {
+                    let output = '<table>';
+                    output += '<tr>'; // Beginne eine neue Zeile
+                    for (let i = 0; i < data.length; i++) {
+                        output += '<td>' + data[i] + '</td>'; // Füge jede Zelle in die gleiche Zeile ein
+                    }
+                    output += '</tr>'; // Schließe die Zeile
+                    output += '</table>';
+
+                    document.getElementById('arrayDisplay').innerHTML = output;
+                    for (let i = 0; i < colorArray[tries].length; i++) {
+                        colorArray[tries][i] = data[i];
+                        letterArray[tries][i] = word[i];
+                    }
+                    board.replaceChildren(); // Entfernt alle Kindelemente
+                    for (let row = 0; row < 8; row++) {
+                        for (let col = 0; col < 5; col++) {
+                            const tile = document.createElement('div');
+                            tile.textContent = letterArray[row][col];
+                            tile.classList.add('tile');
+                            if (colorArray[row][col] == 1) tile.classList.add('tileabsent');
+                            if (colorArray[row][col] == 2) tile.classList.add('tilepresent');
+                            if (colorArray[row][col] == 3) tile.classList.add('tilecorrect');
+                            board.appendChild(tile);
+                        }
+                    }
+                    tries++;
+                    word = '';
+                    document.getElementById("guess").value = '';
+                })
+                .catch(error => console.error('Fehler beim Abrufen der Daten:', error));
+        }else{
+            fetch("/guess", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    gameId: gameId,
+                    guess: word,
+                    playerName: playerName,
+                })
+            }).then(response => response.json())
+                .then(data => {
+                    let output = '<table>';
+                    output += '<tr>'; // Beginne eine neue Zeile
+                    for (let i = 0; i < data.length; i++) {
+                        output += '<td>' + data[i] + '</td>'; // Füge jede Zelle in die gleiche Zeile ein
+                    }
+                    output += '</tr>'; // Schließe die Zeile
+                    output += '</table>';
+
+                    document.getElementById('arrayDisplay').innerHTML = output;
+                    for (let i = 0; i < colorArray[tries].length; i++) {
+                        colorArray[tries][i] = data[i];
+                        letterArray[tries][i] = word[i];
+                    }
+                    board.replaceChildren(); // Entfernt alle Kindelemente
+                    for (let row = 0; row < 8; row++) {
+                        for (let col = 0; col < 5; col++) {
+                            const tile = document.createElement('div');
+                            tile.textContent = letterArray[row][col];
+                            tile.classList.add('tile');
+                            if (colorArray[row][col] == 1) tile.classList.add('tileabsent');
+                            if (colorArray[row][col] == 2) tile.classList.add('tilepresent');
+                            if (colorArray[row][col] == 3) tile.classList.add('tilecorrect');
+                            board.appendChild(tile);
+                        }
+                    }
+                    tries++;
+                    word = '';
+                    document.getElementById("guess").value = '';
+                })
+                .catch(error => console.error('Fehler beim Abrufen der Daten:', error));
+        }
+
     }
 
     function tryWord() {
@@ -194,7 +262,7 @@
 
 
 
-            fetch('/guess/' + word + "&" + slider)
+            fetch('/guess/' + word )
                 .then(response => response.json())
                 .then(data => {
                     let output = '<table>';

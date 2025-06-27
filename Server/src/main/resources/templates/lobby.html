@@ -31,6 +31,7 @@
     }
 
     function navigateToGame(gameId, port, playerName) {
+        console.log("Port -> " + port)
         const targetHost = window.location.hostname; // Keeps same domain (e.g., localhost or example.com)
         const targetPath = "/game?id="+gameId+"&name="+encodeURIComponent(playerName);  // Change to the desired path on that server if needed
 
@@ -74,10 +75,13 @@
             return;
         }
         fetch(`/join-game?id=${gameId}`)
+
             .then(response => response.json())
             .then(data => {
+                console.log(data)
+
                 if (data.status === 'joined') {
-                    navigateToGame(gameId, data.port, playerName);
+                    navigateToGame(gameId, data.message, playerName);
                 } else {
                     showError(data.message);
                 }

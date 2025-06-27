@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +17,8 @@ public class WebController {
     private static final Logger log = LoggerFactory.getLogger(WebController.class);
     String dailyWord = WordHandler.getRandomWord();
     HashMap<String, GameLobby> subservers = new HashMap<>();
+
+
 
 
     @GetMapping("/reset/new_word")
@@ -74,6 +77,7 @@ public class WebController {
             process = Runtime.getRuntime()
                     .exec(String.format("/bin/sh -c ls %s", "homeDirectory"));
         }
+
         subservers.put(gameId, new GameLobby(gameId, subServerPort));
         subservers.get(gameId).joinRequest();
         log.info("server {} started on port http://localhost:{}/game",gameId,subServerPort);
@@ -91,7 +95,9 @@ public class WebController {
         String message="";
         if(subservers.get(id)!=null){
             if(subservers.get(id).joinRequest()){
+                log.info(""+subservers.get(id).port);
                 return ResponseEntity.ok(("{\"status\" : \"joined\" , \"message\" : \""+subservers.get(id).port+"\"}"));
+
             }
             return ResponseEntity.status(400).body("{ status: 'error', message: 'Game is full' }");
         }
@@ -103,12 +109,14 @@ public class WebController {
         return "login";
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping("/try/{word}")
     @ResponseBody
     public ResponseEntity<int[]> tryWord(@PathVariable("word") String word) {
         return checkWord(word, dailyWord);
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping("/try/{word}/{correctWord}")
     @ResponseBody
     public ResponseEntity<int[]> tryWord(@PathVariable("word") String word, @PathVariable("correctWord") String correctWord) {
