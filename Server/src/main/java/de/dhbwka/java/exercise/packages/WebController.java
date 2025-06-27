@@ -65,10 +65,11 @@ public class WebController {
                 .toLowerCase().startsWith("windows");
         Process process;
         if (isWindows) {
-            String command = String.format("node %s" + " " + gameId + " " + subServerPort + " " + newWord, new File("templates/NewSubserver.js").getAbsolutePath());
+            String command = String.format("node %s" + " " + gameId + " " + subServerPort + " " + newWord, new File("Server/src/main/resources/templates/NewSubServer.js").getAbsolutePath());
+
             process = Runtime.getRuntime()
                     .exec(command);
-            log.debug("Startet Subserver with command {}",command);
+            log.info("Startet Subserver with command {}",command);
         } else {
             process = Runtime.getRuntime()
                     .exec(String.format("/bin/sh -c ls %s", "homeDirectory"));

@@ -6,16 +6,18 @@ const path = require('path'); // Add this line
 
 const app = express();
 const server = http.createServer(app);
+const gameId = process.argv[2] || 1;
+const PORT = parseInt(process.argv[3], 10) || 4000;
+const correctWord = process.argv[4];
 const io = new Server(server, {
+    transports: ["polling"],
     cors: {
         origin: "*",
         methods: ["GET", "POST"]
     }
 });
 
-const gameId = process.argv[2] || 1;
-const PORT = parseInt(process.argv[3], 10) || 4000;
-const correctWord = process.argv[4];
+
 
 if (!gameId || !PORT || !correctWord) {
     console.error('Sub-server requires gameId, PORT and CorrectWord arguments.');
@@ -37,7 +39,10 @@ app.get('/game', (req, res) => {
 });
 
 
-
+app.post("/guess", (req, res) => {
+    console.log("HTTP guess:", req.body);
+    res.send({ ok: true });
+});
 
 
 io.on('connection', (socket) => {
@@ -62,47 +67,11 @@ io.on('connection', (socket) => {
 
     });
 
-    socket.on('guess',async({gameId, guess, playerName}) => {
-        console.log("GameData.word -> " + gameData.word)
-        if (!gameId) {
-            socket.emit('message', 'Game not found.');
-            return;
-        }
-
-        const player = game.players.find(p => p.id === socket.id);
-        if (!player) {
-            console.error(`Player ${socket.id} not found in game ${gameId}`);
-            return;
-        }
-
-        if (game.gameOver) {
-            socket.emit('message', 'The game is over.');
-            return;
-        }
-
-        const currentGuess = guess.toUpperCase();
-        player.guesses.push(currentGuess);
-        gameData.submittedWords.push({word: currentGuess, player: playerName});
-
-        io.to(gameId).emit('update-board', {
-            board: gameData.submittedWords, // This is the 1D array of strings for this player
-            playerName: playerName // Send the name of the player who made the guess
-        });
-
-        setTimeout(async  () => {
-            try {
-                if(isDaily){
-                    const result = await fetch(`/try/${currentGuess}/try-daily`)
-                }else{
-                    const result = await fetch(`/try/${currentGuess}/${gameData.word}`)
-
-                }
-            }catch (error){
-                console.log('ERROR Line 133')
-            }
-        }, 100)
+    socket.on('guess',data => {
+        console.log("Realtime guess:", data);
 
     });
+
     socket.on('new-game', ({ gameId, playerName }) => { // Expect playerName
         if (!gameId) {
             socket.emit('message', 'Game not found.');
@@ -146,50 +115,6 @@ io.on('connection', (socket) => {
     });
 
 });
-
-async function sendReq(requestType, data) {
-    const postData = JSON.stringify({ gameId, ...data });
-    const url = new URL("http://localhost:3000");
-
-    const options = {
-        hostname: url.hostname,
-        port: url.port || (url.protocol === 'https:' ? 443 : 80),
-        path: requestType, // The specific endpoint, e.g., '/wordcheck'
-        method: 'POST', // Assuming most requests will be POST with data
-        headers: {
-            'Content-Type': 'application/json',
-            'Content-Length': Buffer.byteLength(postData),
-        },
-    };
-
-    return new Promise((resolve, reject) => {
-        const req = http.request(options, (res) => {
-            let rawData = '';
-            res.setEncoding('utf8');
-            res.on('data', (chunk) => {
-                rawData += chunk;
-            });
-            res.on('end', () => {
-                try {
-                    const parsedData = JSON.parse(rawData);
-                    console.log(`Sub-server ${gameId} received response from ${requestType}:`, parsedData);
-                    resolve(parsedData);
-                } catch (e) {
-                    console.error(`Sub-server ${gameId} error parsing response from ${requestType}: ${e.message}`);
-                    reject(new Error(`Failed to parse response: ${rawData}`));
-                }
-            });
-        });
-
-        req.on('error', (e) => {
-            console.error(`Sub-server ${gameId} problem with request to ${requestType}: ${e.message}`);
-            reject(e);
-        });
-
-        req.write(postData);
-        req.end();
-    });
-}
 
 server.listen(PORT, () => {
     console.log(`Sub-server for game ${gameId} is running on http://localhost:${PORT}/game`);
