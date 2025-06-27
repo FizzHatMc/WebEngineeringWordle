@@ -8,7 +8,7 @@ function showError(message) {
 
 function navigateToGame(gameId, port, playerName) {
     // Use relative path and include the port and player name
-    window.location.href = `game.html?id=${gameId}&port=${port}&name=${encodeURIComponent(playerName)}`;
+    window.location.href = `:${port}/game.html?id=${gameId}&name=${encodeURIComponent(playerName)}`;
 }
 
 function createGame(){

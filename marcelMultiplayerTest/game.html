@@ -1,48 +1,149 @@
 <!DOCTYPE html>
-<html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multiplayer Wordle</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.4/socket.io.js"></script>
-</head>
-<body class="bg-gray-900 text-gray-50">
-<h1 class="text-3xl font-bold mb-4">Multiplayer Wordle</h1>
-<div id="game-container">
-    <div id="board"></div>
-    <div id="input-container">
-        <input type="text" id="text-input" placeholder="Enter your guess" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-        <button id="submit-button" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Submit</button>
-    </div>
-    <div id="players-container">
-        <h2>Players</h2>
-        <ul id="player-list">
-        </ul>
-    </div>
-    <div id="message-container"></div>
-    <div id="game-over-modal">
-        <div id="game-over-content">
-            <h2 id="game-over-title"></h2>
-            <p id="game-over-message"></p>
-            <button id="new-game-button">New Game</button>
-        </div>
-    </div>
-    <div id="submitted-words">
-        <h2>Submitted Words</h2>
-        <ul id="word-list">
-        </ul>
-    </div>
-    <div id="daily">
-        <label class="switch", id="dailySwitch">
-            <input type="checkbox">
-            <span class="slider round"></span>
-        </label>
-        <p id="p1">test</p>
-    </div>
-</div>
-<script src="script.js"></script>
+    <title>Game</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column; /* Vertikale Anordnung */
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #a0e0f0;
+        }
 
+        .wordle-board {
+            display: grid;
+            grid-template-columns: repeat(5, 50px);
+            grid-gap: 5px;
+        }
+
+        .tile {
+            width: 50px;
+            height: 50px;
+            background-color: #fff;
+            border: 2px solid #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            text-transform: uppercase;
+        }
+
+        .tilecorrect {
+            background-color: #6aaa64;
+        }
+
+        .tilepresent {
+            background-color: #c9b458;
+        }
+
+        .tileabsent {
+            background-color: #787c7e;
+        }
+
+        .keyboard {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .keyboard-button {
+            width: 30px;
+            height: 30px;
+            margin: 5px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            background-color: #eee;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<h1>GAME</h1><br>
+<a href="http://localhost:8080/">home</a>
+<div class="wordle-board">
+    <!-- Tiles will be added here -->
+</div>
+<div class="keyboard">
+    <!-- Keyboard buttons will be added here -->
+</div>
+<div id="arrayDisplay"></div>
+
+<div><label> Your guess: <input type="text" onchange="tryWord()" name="guess" id="guess"/> </label></div>
+<div><input type="button" value="Submit" onclick="tryWord()"/></div>
+</form>
+
+<script>
+    const rows = 8;
+    const cols = 5;
+    const colorArray = [];
+    const letterArray = [];
+    var tries = 0;
+
+    const gameId = new URLSearchParams(window.location.search).get('id');
+    const port = new URLSearchParams(window.location.search).get('port');
+    const playerName = new URLSearchParams(window.location.search).get('name'); // Get player name
+
+    for (let i = 0; i < rows; i++) {
+        colorArray[i] = []; // Erstelle eine neue Zeile (inneres Array)
+        letterArray[i] = []; // Erstelle eine neue Zeile (inneres Array)
+        for (let j = 0; j < cols; j++) {
+            colorArray[i][j] = 0;
+            letterArray[i][j] = '';
+        }
+    }
+    const board = document.querySelector('.wordle-board');
+    var word = document.getElementById("guess").value;
+    // erstellt die Tiles
+    for (let row = 0; row < 8; row++) {
+        for (let col = 0; col < 5; col++) {
+            const tile = document.createElement('div');
+            tile.classList.add('tile');
+            board.appendChild(tile);
+        }
+    }
+    function tryWord() {
+        word = document.getElementById("guess").value;
+        if (word.length == 5) {
+            fetch('/try/' + word)
+                .then(response => response.json())
+                .then(data => {
+                    let output = '<table>';
+                    output += '<tr>'; // Beginne eine neue Zeile
+                    for (let i = 0; i < data.length; i++) {
+                        output += '<td>' + data[i] + '</td>'; // Füge jede Zelle in die gleiche Zeile ein
+                    }
+                    output += '</tr>'; // Schließe die Zeile
+                    output += '</table>';
+
+                    document.getElementById('arrayDisplay').innerHTML = output;
+                    for (let i = 0; i < colorArray[tries].length; i++) {
+                        colorArray[tries][i] = data[i];
+                        letterArray[tries][i] = word[i];
+                    }
+                    board.replaceChildren(); // Entfernt alle Kindelemente
+                    for (let row = 0; row < 8; row++) {
+                        for (let col = 0; col < 5; col++) {
+                            const tile = document.createElement('div');
+                            tile.textContent = letterArray[row][col];
+                            tile.classList.add('tile');
+                            if (colorArray[row][col] == 1) tile.classList.add('tileabsent');
+                            if (colorArray[row][col] == 2) tile.classList.add('tilepresent');
+                            if (colorArray[row][col] == 3) tile.classList.add('tilecorrect');
+                            board.appendChild(tile);
+                        }
+                    }
+                    tries++;
+                    word = '';
+                    document.getElementById("guess").value = '';
+                })
+                .catch(error => console.error('Fehler beim Abrufen der Daten:', error));
+        }
+    }
+</script>
 </body>
 </html>

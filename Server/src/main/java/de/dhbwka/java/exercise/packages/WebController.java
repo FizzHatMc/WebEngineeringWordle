@@ -59,21 +59,23 @@ public class WebController {
     public ResponseEntity<String> create_game() throws IOException {
         String gameId = generateID();
         String newWord = WordHandler.getRandomWord();
-        int subServerPort = 4000 + subservers.size();
+        int subServerPort = 4001 + subservers.size();
         // Start the sub-server as a separate Node.js process
         boolean isWindows = System.getProperty("os.name")
                 .toLowerCase().startsWith("windows");
         Process process;
         if (isWindows) {
+            String command = String.format("node %s" + " " + gameId + " " + subServerPort + " " + newWord, new File("templates/NewSubserver.js").getAbsolutePath());
             process = Runtime.getRuntime()
-                    .exec(String.format("cmd.exe /c node %s" + " "+ gameId+" "+subServerPort+" "+newWord, new File("/marcelMultiplayerTest/subserver.js").getAbsolutePath()));
+                    .exec(command);
+            log.debug("Startet Subserver with command {}",command);
         } else {
             process = Runtime.getRuntime()
                     .exec(String.format("/bin/sh -c ls %s", "homeDirectory"));
         }
         subservers.put(gameId, new GameLobby(gameId, subServerPort));
         subservers.get(gameId).joinRequest();
-        log.debug("server {} started on port {}",gameId,subServerPort);
+        log.info("server {} started on port http://localhost:{}/game",gameId,subServerPort);
 
         return ResponseEntity.ok(("{\"gameId\" : \""+gameId+"\" , \"port\" : \""+subServerPort+"\"}"));
     }

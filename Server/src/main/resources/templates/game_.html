@@ -94,7 +94,6 @@
         }
     </style>
 </head>
-
 <body>
 <div class="icon-bar">
     <a id="menuicon" href="http://localhost:8080/">
@@ -124,6 +123,10 @@
     const colorArray = [];
     const letterArray = [];
     var tries = 0;
+
+    const gameId = new URLSearchParams(window.location.search).get('id');
+    const port = new URLSearchParams(window.location.search).get('port');
+    const playerName = new URLSearchParams(window.location.search).get('name'); // Get player name
 
     for (let i = 0; i < rows; i++) {
         colorArray[i] = []; // Erstelle eine neue Zeile (inneres Array)
@@ -180,9 +183,6 @@
                 })
                 .catch(error => console.error('Fehler beim Abrufen der Daten:', error));
         }
-    }
-    function setLetter(col) {
-
     }
 </script>
 </body>
