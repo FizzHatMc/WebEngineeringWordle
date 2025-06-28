@@ -6,6 +6,7 @@
     <style>
         body {
             font-family: sans-serif;
+            margin: 0;
         }
 
         .game {
@@ -17,31 +18,20 @@
             background-color: #ffffff;
         }
 
-        ul {
-            list-style-type: none;
-            width: 100%;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
+        #navbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 10%;
             background-color: #C7EDE4;
         }
 
-        li {
-            float: left;
-            horiz-align: center;
-        }
-
-        li a {
-            display: block;
-            color: #672A4E;;
-            text-align: center;
-            padding: 14px 16px;
+        #navbar a {
             text-decoration: none;
+            color: #672A4E;
         }
 
-        li a:hover {
-            background-color: #D5FFF3;
-        }
         .menu {
             width: 35px;
             height: 5px;
@@ -98,18 +88,11 @@
     </style>
 </head>
 <body>
-<section class="navbar">
-<ul>
-    <li><a href="http://localhost:8080/">
-        <div class="menu"></div>
-        <div class="menu"></div>
-        <div class="menu"></div>
-    </a></li>
-    <li style="float: right; text-align: center"><a href="http://localhost:8080/">
-        WORDLE ONLINE
-    </a></li>
-</ul>
-</section>
+<nav id="navbar">
+    <a href="http://localhost:8080/">
+        <h1>WORDLE ONLINE</h1>
+    </a>
+</nav>
 <section class="game">
 <div class="wordle-board">
     <!-- Tiles will be added here -->
@@ -138,7 +121,7 @@
         colorArray[i] = []; // Erstelle eine neue Zeile (inneres Array)
         letterArray[i] = []; // Erstelle eine neue Zeile (inneres Array)
         for (let j = 0; j < cols; j++) {
-            colorArray[i][j] = 0;
+            colorAr         ray[i][j] = 0;
             letterArray[i][j] = '';
         }
     }
