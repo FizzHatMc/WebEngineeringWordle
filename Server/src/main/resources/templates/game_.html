@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Game</title>
+    <title>Wordle</title>
     <style>
         body {
             font-family: sans-serif;
@@ -113,13 +113,14 @@
         }
     </style>
 </head>
+
 <body>
 <nav id="navbar">
     <a href="http://localhost:8080/">
         <h1>WORDLE ONLINE</h1>
     </a>
 </nav>
-<section class="game">
+<div class="game">
     <div class="wordle-board">
         <!-- hier Tiles -->
     </div>
@@ -127,9 +128,9 @@
         <!-- Keyboard buttons hinzufügen? -->
     </div>
 <!--    <div id="arrayDisplay"></div> Debugzahlen-->
-    <input type="text" onchange="tryWord()" name="guess" id="guess"/>
-    <input type="button" value="Guess" onclick="tryWord()"/>
-</section>
+    <input type="text" onchange="tryWord()" name="guess" id="guess">
+    <input type="button" value="Guess" onclick="tryWord()">
+</div>
 
 <footer>
     <p>Impressum type shi</p>
@@ -165,7 +166,9 @@
         }
     }
     function tryWord() {
+        console.log("123Test");
         word = document.getElementById("guess").value;
+        console.log(word);
         if (word.length == 5) {
             fetch('/try/' + word)
                 .then(response => response.json())
@@ -184,8 +187,8 @@
                         letterArray[tries][i] = word[i];
                     }
                     board.replaceChildren(); // Entfernt alle Kindelemente
-                    for (let row = 0; row < 8; row++) {
-                        for (let col = 0; col < 5; col++) {
+                    for (let row = 0; row < rows; row++) {
+                        for (let col = 0; col < cols; col++) {
                             const tile = document.createElement('div');
                             tile.textContent = letterArray[row][col];
                             tile.classList.add('tile');

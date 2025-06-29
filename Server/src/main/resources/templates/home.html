@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <style>
@@ -10,29 +10,73 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background-color: #a0e0f0;
+            background-color: #D5FFF3;
         }
 
-        .button {
-            width: 30px;
-            height: 30px;
-            margin: 5px;
+        footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            font-size: small;
+            background-color: #C7EDE4;
+            color: #af9ab2;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: xxx-large;
+            text-align: center;
+            margin: 40px;
+
+            /*color: #672a4e;*/
+
+            color: #D5FFF3;
+            background-color: #820b8a;
+            border-radius: 50%;
+            padding: 30px;
+
+            /*color: #AF9AB2;*/
+            /*background-color: #820b8a;*/
+            /*border-radius: 40px;*/
+            /*padding: 20px;*/
+
+            /*background-color: #C7EDE4;*/
+            /*color: #820b8a;*/
+            /*border-radius: 40px;*/
+            /*padding: 20px;*/
+        }
+
+        a {
+            margin: 10px;
+            background-color: #672A4E;
             padding: 5px;
-            border: 1px solid #ccc;
-            background-color: #eee;
-            font-size: 16px;
-            cursor: pointer;
+            border-radius: 10px;
+            font-size: x-large;
+            color: white;
+            text-decoration: none;
+        }
+
+        a:hover {
+            background-color: #820b8a;
+            color: #D5FFF3;
         }
     </style>
 
     <title>Home</title>
 </head>
-<body>
-<h1>Home</h1>
 
-<br>
-<a href="http://localhost:8080/game">spielen</a>
+<body>
+
+<h1>WORDLE<br><em>online</em></h1>
+
+<a href="http://localhost:8080/game">Spielen</a>
 <a href="http://localhost:8080/lobby">Lobby</a>
 <a href="http://localhost:8080/login">Login</a>
+
+<footer>
+    <p>Impressum type shi</p>
+</footer>
+
 </body>
 </html>
