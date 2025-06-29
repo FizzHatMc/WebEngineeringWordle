@@ -1,84 +1,35 @@
 <!DOCTYPE html>
-
+<html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Game</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            display: flex;
-            flex-direction: column; /* Vertikale Anordnung */
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #a0e0f0;
-        }
-
-        .wordle-board {
-            display: grid;
-            grid-template-columns: repeat(5, 50px);
-            grid-gap: 5px;
-        }
-
-        .tile {
-            width: 50px;
-            height: 50px;
-            background-color: #fff;
-            border: 2px solid #ccc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            text-transform: uppercase;
-        }
-
-        .tilecorrect {
-            background-color: #6aaa64;
-        }
-
-        .tilepresent {
-            background-color: #c9b458;
-        }
-
-        .tileabsent {
-            background-color: #787c7e;
-        }
-
-        .keyboard {
-            display: flex;
-            flex-wrap: wrap;
-            margin-top: 20px;
-        }
-
-        .keyboard-button {
-            width: 30px;
-            height: 30px;
-            margin: 5px;
-            padding: 5px;
-            border: 1px solid #ccc;
-            background-color: #eee;
-            font-size: 16px;
-            cursor: pointer;
-        }
-    </style>
+    <title>Wordle</title>
+    <link rel="stylesheet" href="game.css">
 </head>
-<body>
-<h1>GAME</h1><br>
-<a href="http://localhost:8080/">home</a>
-<div class="wordle-board">
-    <!-- Tiles will be added here -->
-</div>
-<div class="keyboard">
-    <!-- Keyboard buttons will be added here -->
-</div>
-<div id="arrayDisplay"></div>
 
-<div><label> Your guess: <input type="text" onchange="tryWord()" name="guess" id="guess"/> </label></div>
-<div><input type="button" value="Submit" onclick="tryWord()"/></div>
-</form>
+<body>
+<nav id="navbar">
+    <a href="http://localhost:8080/">
+        <h1>WORDLE ONLINE</h1>
+    </a>
+</nav>
+<div class="game">
+    <div class="wordle-board">
+        <!-- hier Tiles -->
+    </div>
+    <div class="keyboard">
+        <!-- Keyboard buttons hinzufügen? -->
+    </div>
+<!--    <div id="arrayDisplay"></div> Debugzahlen-->
+    <input type="text" autocomplete="off" onchange="tryWord()" name="guess" id="guess">
+    <input type="button" value="Guess" onclick="tryWord()">
+</div>
+
+<footer>
+    <p>Impressum type shi</p>
+</footer>
 
 <script>
-    const rows = 8;
+    const rows = 6;
     const cols = 5;
     const colorArray = [];
     const letterArray = [];
@@ -99,15 +50,17 @@
     const board = document.querySelector('.wordle-board');
     var word = document.getElementById("guess").value;
     // erstellt die Tiles
-    for (let row = 0; row < 8; row++) {
-        for (let col = 0; col < 5; col++) {
+    for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
             const tile = document.createElement('div');
             tile.classList.add('tile');
             board.appendChild(tile);
         }
     }
     function tryWord() {
+        console.log("123Test");
         word = document.getElementById("guess").value;
+        console.log(word);
         if (word.length == 5) {
             fetch('/try/' + word)
                 .then(response => response.json())
@@ -126,8 +79,8 @@
                         letterArray[tries][i] = word[i];
                     }
                     board.replaceChildren(); // Entfernt alle Kindelemente
-                    for (let row = 0; row < 8; row++) {
-                        for (let col = 0; col < 5; col++) {
+                    for (let row = 0; row < rows; row++) {
+                        for (let col = 0; col < cols; col++) {
                             const tile = document.createElement('div');
                             tile.textContent = letterArray[row][col];
                             tile.classList.add('tile');
