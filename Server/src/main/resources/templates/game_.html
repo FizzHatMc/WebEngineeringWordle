@@ -16,7 +16,6 @@
             margin: 10px;
             align-items: center;
             min-height: 100vh;
-            background-color: #ffffff;
         }
 
         #navbar {
@@ -35,19 +34,21 @@
 
         #navbar a:hover {
             background-color: #D5FFF3;
+            color: #820b8a;
         }
 
         .wordle-board {
             display: grid;
             grid-template-columns: repeat(5, 50px);
-            grid-gap: 5px;
+            grid-gap: 8px;
         }
 
         .tile {
             width: 50px;
             height: 50px;
-            background-color: #fff;
-            border: 2px solid #ccc;
+            margin: 2px;
+            background-color: #D5FFF3;
+            border: 2px solid #af9ab2;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -83,6 +84,33 @@
             font-size: 16px;
             cursor: pointer;
         }
+
+        input {
+            margin: 5px;
+            font-size: 16px;
+            border-radius: 5px;
+            width: 70px;
+            text-align: center;
+            border: 1px solid #672A4E;
+            /*border: none;*/
+        }
+
+        input[type=button] {
+            border: none;
+            background-color: #672A4E;
+            color: white;
+        }
+
+        footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            font-size: small;
+            background-color: #C7EDE4;
+            color: #af9ab2;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -92,17 +120,20 @@
     </a>
 </nav>
 <section class="game">
-<div class="wordle-board">
-    <!-- Tiles will be added here -->
-</div>
-<div class="keyboard">
-    <!-- Keyboard buttons will be added here -->
-</div>
-<div id="arrayDisplay"></div>
-    <div><label> Your guess: <input type="text" onchange="tryWord()" name="guess" id="guess"/> </label></div>
-    <div><input type="button" value="Submit" onclick="tryWord()"/>
-</div>
+    <div class="wordle-board">
+        <!-- hier Tiles -->
+    </div>
+    <div class="keyboard">
+        <!-- Keyboard buttons hinzufügen? -->
+    </div>
+<!--    <div id="arrayDisplay"></div> Debugzahlen-->
+    <input type="text" onchange="tryWord()" name="guess" id="guess"/>
+    <input type="button" value="Guess" onclick="tryWord()"/>
 </section>
+
+<footer>
+    <p>Impressum type shi</p>
+</footer>
 
 <script>
     const rows = 6;
