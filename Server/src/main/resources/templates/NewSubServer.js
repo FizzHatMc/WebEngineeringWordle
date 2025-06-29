@@ -18,31 +18,51 @@ const io = new Server(server, {
 });
 
 app.use(express.json());  // **MUST BE BEFORE your routes**
-app.use(cors());
+
 
 if (!id || !PORT || !correctWord) {
     console.error('Sub-server requires id, PORT and CorrectWord arguments.');
+
     process.exit(1);
 }
+
+const map = new Map();
 
 const gameData = {
     players: [],
     word: correctWord,
     gameOver: false,
-    submittedWords: []
+    submittedWords: map
 }
 
 
 // Handle /game route
 app.get('/game', (req, res) => {
+    console.error(gameData.word + " - " + correctWord)
     res.sendFile(path.join(__dirname, '/game_.html'));
 });
 
+var guessCounter = 0
 
 app.post("/guess", (req, res) => {
     console.log("HTTP guess:", req.body);
-    fetch('http://localhost:8080/try/' + word + "/" + correctWord).then(r  => res.send(r))
-    io.emit('updateAll', { message: 'Server processed update', word });
+    const { gameId, guess, playerName } = req.body;
+
+    guessCounter++
+
+
+    if(gameData.submittedWords.size>=6){
+        console.log("Done")
+        res.send("Done")
+        return
+    }
+
+    gameData.submittedWords.set(playerName+""+guessCounter,guess)
+    console.log(gameData.submittedWords)
+
+
+    fetch('http://localhost:8080/try/' + guess + "/" + gameData.word).then(r  => res.send(r))
+    io.emit('updateAll', { message: 'Server processed update', guess });
 });
 
 

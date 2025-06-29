@@ -8,8 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 
 @Controller
@@ -64,23 +66,90 @@ public class WebController {
         String newWord = WordHandler.getRandomWord();
         int subServerPort = 4001 + subservers.size();
         // Start the sub-server as a separate Node.js process
-        boolean isWindows = System.getProperty("os.name")
-                .toLowerCase().startsWith("windows");
-        Process process;
-        if (isWindows) {
-            String command = String.format("node %s" + " " + gameId + " " + subServerPort + " " + newWord, new File("Server/src/main/resources/templates/NewSubServer.js").getAbsolutePath());
+        try {
 
-            process = Runtime.getRuntime()
-                    .exec(command);
-            log.info("Startet Subserver with command {}",command);
-        } else {
-            process = Runtime.getRuntime()
-                    .exec(String.format("/bin/sh -c ls %s", "homeDirectory"));
+            String nodeCommand;
+            if (System.getProperty("os.name").toLowerCase().contains("win")) {
+                // Windows
+                Process whichProcess = Runtime.getRuntime().exec("where node");
+                whichProcess.waitFor();
+                try (BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(whichProcess.getInputStream()))) {
+                    nodeCommand = reader.readLine();
+                }
+            } else {
+                // Linux/Mac
+                Process whichProcess = Runtime.getRuntime().exec("which node");
+                whichProcess.waitFor();
+                try (BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(whichProcess.getInputStream()))) {
+                    nodeCommand = reader.readLine();
+                }
+            }
+
+            if (nodeCommand == null || nodeCommand.isEmpty()) {
+                throw new RuntimeException("Node.js not found in PATH");
+            }
+
+            String jsFilePath = new File("Server/src/main/resources/templates/NewSubServer.js").getAbsolutePath();
+            String[] command = {
+                    nodeCommand,
+                    jsFilePath,
+                    gameId,
+                    String.valueOf(subServerPort),
+                    newWord
+            };
+
+
+            ProcessBuilder pb = new ProcessBuilder(command);
+            pb.directory(new File("/home/marcel/IdeaProjects/WebEngineeringWordle"));
+            pb.redirectErrorStream(true);
+
+            log.info("Starting subserver with command: {}", String.join(" ", command));
+
+            Process process = pb.start();
+
+            // Step 4: Log output from the subserver
+            new Thread(() -> {
+                try (BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(process.getInputStream()))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        log.info("Subserver: {}", line);
+                    }
+                } catch (IOException e) {
+                    log.error("Error reading subserver output", e);
+                }
+            }).start();
+
+            // Step 5: Add shutdown hook to ensure subserver is killed when main app exits
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                if (process.isAlive()) {
+                    process.destroy();
+                    log.info("Subserver process terminated");
+                }
+            }));
+
+            // Step 6: Verify the subserver started successfully
+            // Wait briefly to detect immediate failures
+            Thread.sleep(1000); // Wait 1 second
+            if (!process.isAlive()) {
+                int exitCode = process.exitValue();
+                throw new RuntimeException("Subserver failed to start, exited with code " + exitCode);
+            }
+
+            log.info("Subserver started successfully on port {}", subServerPort);
+
+        } catch (Exception e) {
+            log.error("Failed to start subserver", e);
+            throw new RuntimeException("Could not start subserver", e);
         }
+
+
 
         subservers.put(gameId, new GameLobby(gameId, subServerPort));
         subservers.get(gameId).joinRequest();
-        log.info("server {} started on port http://localhost:{}/game",gameId,subServerPort);
+        //log.info("server {} started on port http://localhost:{}/game",gameId,subServerPort);
 
         return ResponseEntity.ok(("{\"gameId\" : \""+gameId+"\" , \"port\" : \""+subServerPort+"\"}"));
     }

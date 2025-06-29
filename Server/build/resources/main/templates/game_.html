@@ -174,11 +174,13 @@
 
     function sendGuessHTTP() {
         word = document.getElementById("guess").value;
-        slider = document.getElementById("dailyCheck")
-        console.log("Word -> " + word )
+        slider = document.getElementById("dailyCheck").checked;
+        console.log("Word -> " + word + " | DailyCheck -> " + slider )
 
         if(slider){
-            fetch('http://localhost:8080/try/' + word )
+            const address = 'http://localhost:8080/try/' + word
+            console.log(address)
+            fetch(address)
                 .then(response => response.json())
                 .then(data => {
                     let output = '<table>';
