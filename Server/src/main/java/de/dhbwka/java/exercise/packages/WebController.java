@@ -170,6 +170,11 @@ public class WebController {
         return ResponseEntity.status(404).body("{ status: 'error', message: 'Game not found' }");
     }
 
+    @GetMapping("/spielbeitritt")
+    public String spielbeitritt(/*@RequestParam(name="name",required=true) String name*/) {
+        return "join-game";
+    }
+
     @GetMapping("/login")
     public String login() {
         return "login";

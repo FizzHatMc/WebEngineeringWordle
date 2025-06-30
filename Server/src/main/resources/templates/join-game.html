@@ -15,7 +15,7 @@
 
 <!--  <input type="text" id="name-input" placeholder="Gib hier deinen Namen an">-->
   <input type="text" id="game-id-input" placeholder="Bitte Spiel-ID eingeben">
-<!--  <button id="join-game" onclick="joinGame()">Join Game</button>-->
+  <button id="join-game" onclick="joinGame()">Join Game</button>
 
 
   <div id="error-message" class="error-message"></div>
@@ -45,9 +45,13 @@
 
   function joinGame(){
     const gameId = gameIdInput.value.trim();
-    const playerName = nameInput.value.trim();
+
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const playerName = urlParams.get('name');
+
     if (!playerName) {
-      showError('Please enter your name.');
+      showError('No name ¯\\_(ツ)_/¯');
       return;
     }
     if (!gameId) {
