@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Wordle</title>
-    <link rel="stylesheet" href="game.css">
-</head>
+    <link rel="stylesheet" type="text/css" href="/static/game.css"></head>
+
 <body>
 <nav id="navbar">
     <a href="http://localhost:8080/">
@@ -30,6 +30,7 @@
 </footer>
 
 
+</form>
 <script src="/socket.io/socket.io.js"></script>
 <script>
     const rows = 6;
@@ -54,8 +55,8 @@
     const board = document.querySelector('.wordle-board');
     var word = document.getElementById("guess").value;
     // erstellt die Tiles
-    for (let row = 0; row < 5; row++) {
-        for (let col = 0; col < 5; col++) {
+    for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
             const tile = document.createElement('div');
             tile.classList.add('tile');
             board.appendChild(tile);
@@ -65,7 +66,6 @@
     function sendGuessHTTP() {
         word = document.getElementById("guess").value;
         slider = document.getElementById("dailyCheck").checked;
-        console.log("Word -> " + word + " | DailyCheck -> " + slider )
 
         if(slider){
             const address = 'http://localhost:8080/try/' + word

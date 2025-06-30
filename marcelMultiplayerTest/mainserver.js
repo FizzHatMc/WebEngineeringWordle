@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 3000;
 const lobbies = {};
 const subServers = {}; // Keep track of sub-server processes
 
-// Serve static files (lobby.html, game.html)
+// Serve static files (lobby.html, game-tot.html)
 app.use(express.static(path.join(__dirname)));
 app.use(express.json());
 

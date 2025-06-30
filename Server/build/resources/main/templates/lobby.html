@@ -1,26 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multiplayer Wordle Lobby</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-
+    <title>Lobby</title>
+    <link rel="stylesheet" type="text/css" href="/static/lobby-and-home.css">
 </head>
+
 <body class="bg-gray-900 text-gray-50">
 
 <div class="container">
-    <h1>Multiplayer Wordle</h1>
-    <p>Create a new game or join an existing one to play Wordle with friends!</p>
 
-    <input type="text" id="name-input" placeholder="Enter your Name">
+    <h1>WORDLE<br><em>online</em></h1>
+    <p id="anweisung">Erstelle ein neues Spiel oder trete deinen Freunden bei!</p>
+
+    <input type="text" id="name-input" placeholder="Gib hier deinen Namen an">
     <button id="create-game" onclick="createGame()">Create Game</button>
-    <input type="text" id="game-id-input" placeholder="Enter Game ID to Join" >
-    <button id="join-game" onclick="joinGame()">Join Game</button>
+<!--    <input type="text" id="game-id-input" placeholder="Enter Game ID to Join" >-->
+<!--    <button id="join-game" onclick="joinGame()">Join Game</button>-->
+    <a href="join-game.html">Join Game</a>
 
     <div id="error-message" class="error-message"></div>
 
 </div>
+
+<footer>
+    <p>Impressum type shi</p>
+</footer>
+
 <script>
     const gameIdInput = document.getElementById('game-id-input');
     const nameInput = document.getElementById('name-input');
@@ -31,7 +38,6 @@
     }
 
     function navigateToGame(gameId, port, playerName) {
-        console.log("Port -> " + port)
         const targetHost = window.location.hostname; // Keeps same domain (e.g., localhost or example.com)
         const targetPath = "/game?id="+gameId+"&name="+encodeURIComponent(playerName);  // Change to the desired path on that server if needed
 

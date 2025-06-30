@@ -133,11 +133,7 @@ public class WebController {
 
             // Step 6: Verify the subserver started successfully
             // Wait briefly to detect immediate failures
-            Thread.sleep(1000); // Wait 1 second
-            if (!process.isAlive()) {
-                int exitCode = process.exitValue();
-                throw new RuntimeException("Subserver failed to start, exited with code " + exitCode);
-            }
+
 
             log.info("Subserver started successfully on port {}", subServerPort);
 

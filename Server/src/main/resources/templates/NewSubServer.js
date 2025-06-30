@@ -3,6 +3,7 @@ const { v4: uuidv4 } = require('uuid');
 const { Server } = require('socket.io');
 const http = require('http');
 const path = require('path'); // Add this line
+const fs = require('fs');
 
 const app = express();
 const server = http.createServer(app);
@@ -16,9 +17,22 @@ const io = new Server(server, {
         methods: ["GET", "POST"]
     }
 });
+const staticPath = path.join(__dirname, '..', 'static');
+console.log('Static files path:', staticPath);
+console.log('game.css exists:', fs.existsSync(path.join(staticPath, 'game.css')));
+
+// Serve static files
+app.use('/static', express.static(staticPath, {
+    fallthrough: false // Important: don't fall through to other routes
+}));
+
+// Error handler for missing static files
+app.use('/static', (req, res) => {
+    console.error(`Static file not found: ${req.path}`);
+    res.status(404).send('Not found');
+});
 
 app.use(express.json());  // **MUST BE BEFORE your routes**
-
 
 if (!id || !PORT || !correctWord) {
     console.error('Sub-server requires id, PORT and CorrectWord arguments.');
