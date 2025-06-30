@@ -71,6 +71,7 @@ public class WebController {
             String nodeCommand;
             if (System.getProperty("os.name").toLowerCase().contains("win")) {
                 // Windows
+                log.info("Windows");
                 Process whichProcess = Runtime.getRuntime().exec("where node");
                 whichProcess.waitFor();
                 try (BufferedReader reader = new BufferedReader(
@@ -102,7 +103,7 @@ public class WebController {
 
 
             ProcessBuilder pb = new ProcessBuilder(command);
-            pb.directory(new File("/home/marcel/IdeaProjects/WebEngineeringWordle"));
+            pb.directory(new File("/"));
             pb.redirectErrorStream(true);
 
             log.info("Starting subserver with command: {}", String.join(" ", command));
