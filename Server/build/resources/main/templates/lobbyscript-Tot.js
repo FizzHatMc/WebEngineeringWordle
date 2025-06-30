@@ -7,9 +7,15 @@ function showError(message) {
 }
 
 function navigateToGame(gameId, port, playerName) {
-    // Use relative path and include the port and player name
-    window.location.href = `:${port}/game.html?id=${gameId}&name=${encodeURIComponent(playerName)}`;
+    console.log("Port -> " + port)
+    const targetHost = window.location.hostname; // Keeps same domain (e.g., localhost or example.com)
+    const targetPath = "/game?id="+gameId+"&name="+encodeURIComponent(playerName);  // Change to the desired path on that server if needed
+
+    // Navigate to the new port
+    window.location.href = `http://${targetHost}:${port}${targetPath}`;
 }
+
+
 
 function createGame(){
     console.log("Button pressed")
@@ -47,6 +53,7 @@ function joinGame(){
     fetch(`/join-game?id=${gameId}`)
         .then(response => response.json())
         .then(data => {
+
             if (data.status === 'joined') {
                 navigateToGame(gameId, data.port, playerName);
             } else {
@@ -58,4 +65,3 @@ function joinGame(){
             showError('An error occurred. Please check your network connection.');
         });
 }
-
