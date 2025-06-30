@@ -67,7 +67,7 @@ input {
     border: 3px solid #672A4E;
 }
 
-a.menu-button, button {
+a, button {
     margin: 10px;
     background-color: #672A4E;
     padding: 5px;
