@@ -13,9 +13,10 @@
 
   <h1>WORDLE<br><em>online</em></h1>
 
-  <input type="text" id="name-input" placeholder="Gib hier deinen Namen an">
+<!--  <input type="text" id="name-input" placeholder="Gib hier deinen Namen an">-->
   <input type="text" id="game-id-input" placeholder="Bitte Spiel-ID eingeben">
-  <button id="join-game" onclick="joinGame()">Join Game</button>
+<!--  <button id="join-game" onclick="joinGame()">Join Game</button>-->
+
 
   <div id="error-message" class="error-message"></div>
 
@@ -54,10 +55,13 @@
       return;
     }
     fetch(`/join-game?id=${gameId}`)
+
             .then(response => response.json())
             .then(data => {
+              console.log(data)
+
               if (data.status === 'joined') {
-                navigateToGame(gameId, data.port, playerName);
+                navigateToGame(gameId, data.message, playerName);
               } else {
                 showError(data.message);
               }

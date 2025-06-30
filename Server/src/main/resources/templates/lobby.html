@@ -17,8 +17,8 @@
     <input type="text" id="name-input" placeholder="Gib hier deinen Namen an">
     <button id="create-game" onclick="createGame()">Create Game</button>
 <!--    <input type="text" id="game-id-input" placeholder="Enter Game ID to Join" >-->
-<!--    <button id="join-game" onclick="joinGame()">Join Game</button>-->
-    <a href="join-game.html">Join Game</a>
+    <button id="join-game" onclick="route2joinGame()">Join Game</button>
+<!--    <a href="join-game.html">Join Game</a>-->
 
     <div id="error-message" class="error-message"></div>
 
@@ -29,7 +29,6 @@
 </footer>
 
 <script>
-    const gameIdInput = document.getElementById('game-id-input');
     const nameInput = document.getElementById('name-input');
     const errorMessageDisplay = document.getElementById('error-message');
 
@@ -44,8 +43,6 @@
         // Navigate to the new port
         window.location.href = `http://${targetHost}:${port}${targetPath}`;
     }
-
-
 
     function createGame(){
         console.log("Button pressed")
@@ -69,33 +66,13 @@
             });
     }
 
-    function joinGame(){
-        const gameId = gameIdInput.value.trim();
+    function route2joinGame() {
         const playerName = nameInput.value.trim();
         if (!playerName) {
             showError('Please enter your name.');
             return;
         }
-        if (!gameId) {
-            showError('Please enter a Game ID.');
-            return;
-        }
-        fetch(`/join-game?id=${gameId}`)
-
-            .then(response => response.json())
-            .then(data => {
-                console.log(data)
-
-                if (data.status === 'joined') {
-                    navigateToGame(gameId, data.message, playerName);
-                } else {
-                    showError(data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error joining game:', error);
-                showError('An error occurred. Please check your network connection.');
-            });
+        fetch('/spielbeitritt?name=' + playerName);
     }
 
 
