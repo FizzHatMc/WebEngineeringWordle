@@ -53,13 +53,12 @@ app.get('/game', (req, res) => {
     res.sendFile(path.join(__dirname, '/game_.html'));
 });
 
-var guessCounter = 0
+let guessCounter = -1
 
 app.post("/guess", (req, res) => {
     const { gameId, guess, playerName } = req.body;
 
-    guessCounter++
-
+    console.log(guessCounter)
 
     if(gameData.submittedWords.size>=6){
         console.log("Done")
@@ -70,9 +69,8 @@ app.post("/guess", (req, res) => {
     gameData.submittedWords.set(playerName+""+guessCounter,guess)
 
 
-    fetch('http://localhost:8080/try/' + guess + "/" + gameData.word).then(r  => {
+    fetch('http://localhost:8080/try/' + guess + "/" + gameData.word).then(response => response.json()).then(r  => {
         //res.send(r);
-        console.log("Test")
         io.emit('updateAll',  {
             daten: r,
             word: guess,
@@ -80,6 +78,8 @@ app.post("/guess", (req, res) => {
 
         });
     });
+    guessCounter++
+
 
 });
 

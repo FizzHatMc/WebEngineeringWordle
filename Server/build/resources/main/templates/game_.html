@@ -56,6 +56,10 @@
     }
 
     socket.on('updateAll', (send) => {
+        console.log("data ->" + send.daten)
+        console.log("data ->" + send.word)
+        console.log("data ->" + send.tries)
+
         updateBoard(send.daten,send.word,send.tries);
     })
 
@@ -70,23 +74,36 @@
     }
 
     function updateBoard(data,word,tries){
+        console.log("Tries -> " + tries)
         for (let i = 0; i < colorArray[tries].length; i++) {
             colorArray[tries][i] = data[i];
             letterArray[tries][i] = word[i];
+        }
+        board.replaceChildren(); // Entfernt alle Kindelemente
+        for (let row = 0; row < 8; row++) {
+            for (let col = 0; col < 5; col++) {
+                const tile = document.createElement('div');
+                tile.textContent = letterArray[row][col];
+                tile.classList.add('tile');
+                if (colorArray[row][col] == 1) tile.classList.add('tileabsent');
+                if (colorArray[row][col] == 2) tile.classList.add('tilepresent');
+                if (colorArray[row][col] == 3) tile.classList.add('tilecorrect');
+                board.appendChild(tile);
+            }
         }
     }
 
     function sendGuessHTTP() {
         word = document.getElementById("guess").value;
         slider = document.getElementById("dailyCheck").checked;
-
+        if(word.length!==5)return
         if(slider){
             const address = 'http://localhost:8080/try/' + word
-            console.log(address)
             fetch(address)
                 .then(response => response.json())
                 .then(data => {
-                    console.log("data ->" + data)
+
+                    /*
                     let output = '<table>';
                     output += '<tr>'; // Beginne eine neue Zeile
                     for (let i = 0; i < data.length; i++) {
@@ -94,25 +111,14 @@
                     }
                     output += '</tr>'; // Schließe die Zeile
                     output += '</table>';
+*/
+                    //document.getElementById('arrayDisplay').innerHTML = output;
+                    //for (let i = 0; i < colorArray[tries].length; i++) {
+                    //    colorArray[tries][i] = data[i];
+                    //    letterArray[tries][i] = word[i];
+                    //}
 
-                    document.getElementById('arrayDisplay').innerHTML = output;
-                    for (let i = 0; i < colorArray[tries].length; i++) {
-                        colorArray[tries][i] = data[i];
-                        letterArray[tries][i] = word[i];
-                    }
-                    board.replaceChildren(); // Entfernt alle Kindelemente
-                    for (let row = 0; row < 8; row++) {
-                        for (let col = 0; col < 5; col++) {
-                            const tile = document.createElement('div');
-                            tile.textContent = letterArray[row][col];
-                            tile.classList.add('tile');
-                            if (colorArray[row][col] == 1) tile.classList.add('tileabsent');
-                            if (colorArray[row][col] == 2) tile.classList.add('tilepresent');
-                            if (colorArray[row][col] == 3) tile.classList.add('tilecorrect');
-                            board.appendChild(tile);
-                        }
-                    }
-                    tries++;
+                    //tries++;
                     word = '';
                     document.getElementById("guess").value = '';
                 })
@@ -128,6 +134,7 @@
                 })
             }).then(response => response.json())
                 .then(data => {
+                    /*
                     console.log("data ->" + data)
 
                     let output = '<table>';
@@ -156,50 +163,15 @@
                         }
                     }
                     tries++;
-                    word = '';
-                    document.getElementById("guess").value = '';
-                })
-                .catch(error => console.error('Fehler beim Abrufen der Daten:', error));
-        }
-    }
-    function tryWord() {
-        word = document.getElementById("guess").value;
-        if (word.length == 5) {
-            fetch('/try/' + word)
-                .then(response => response.json())
-                .then(data => {
-                    let output = '<table>';
-                    output += '<tr>'; // Beginne eine neue Zeile
-                    for (let i = 0; i < data.length; i++) {
-                        output += '<td>' + data[i] + '</td>'; // Füge jede Zelle in die gleiche Zeile ein
-                    }
-                    output += '</tr>'; // Schließe die Zeile
-                    output += '</table>';
+                    */
 
-                    document.getElementById('arrayDisplay').innerHTML = output;
-                    for (let i = 0; i < colorArray[tries].length; i++) {
-                        colorArray[tries][i] = data[i];
-                        letterArray[tries][i] = word[i];
-                    }
-                    board.replaceChildren(); // Entfernt alle Kindelemente
-                    for (let row = 0; row < rows; row++) {
-                        for (let col = 0; col < cols; col++) {
-                            const tile = document.createElement('div');
-                            tile.textContent = letterArray[row][col];
-                            tile.classList.add('tile');
-                            if (colorArray[row][col] == 1) tile.classList.add('tileabsent');
-                            if (colorArray[row][col] == 2) tile.classList.add('tilepresent');
-                            if (colorArray[row][col] == 3) tile.classList.add('tilecorrect');
-                            board.appendChild(tile);
-                        }
-                    }
-                    tries++;
                     word = '';
                     document.getElementById("guess").value = '';
                 })
                 .catch(error => console.error('Fehler beim Abrufen der Daten:', error));
         }
     }
+
 </script>
 </body>
 </html>
