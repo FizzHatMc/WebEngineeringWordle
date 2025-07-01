@@ -29,8 +29,6 @@
     <p>Impressum type shi</p>
 </footer>
 
-
-</form>
 <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 <script>
     const rows = 6;
@@ -94,29 +92,19 @@
     function sendGuessHTTP() {
         word = document.getElementById("guess").value;
         slider = document.getElementById("dailyCheck").checked;
+        console.log(slider)
         if(word.length!==5)return
         if(slider){
-            const address = 'http://localhost:8080/try/' + word
-            fetch(address)
-                .then(response => response.json())
-                .then(data => {
-
-                    /*
-                    let output = '<table>';
-                    output += '<tr>'; // Beginne eine neue Zeile
-                    for (let i = 0; i < data.length; i++) {
-                        output += '<td>' + data[i] + '</td>'; // Füge jede Zelle in die gleiche Zeile ein
-                    }
-                    output += '</tr>'; // Schließe die Zeile
-                    output += '</table>';
-*/
-                    //document.getElementById('arrayDisplay').innerHTML = output;
-                    //for (let i = 0; i < colorArray[tries].length; i++) {
-                    //    colorArray[tries][i] = data[i];
-                    //    letterArray[tries][i] = word[i];
-                    //}
-
-                    //tries++;
+            console.log("Daily")
+            fetch("/guessDaily",{
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    gameId: gameId,
+                    guess: word,
+                    playerName: playerName,
+                })
+            }).then(data => {
                     word = '';
                     document.getElementById("guess").value = '';
                 })
@@ -130,38 +118,7 @@
                     guess: word,
                     playerName: playerName,
                 })
-            }).then(response => response.json())
-                .then(data => {
-                    /*
-                    console.log("data ->" + data)
-
-                    let output = '<table>';
-                    output += '<tr>'; // Beginne eine neue Zeile
-                    for (let i = 0; i < data.length; i++) {
-                        output += '<td>' + data[i] + '</td>'; // Füge jede Zelle in die gleiche Zeile ein
-                    }
-                    output += '</tr>'; // Schließe die Zeile
-                    output += '</table>';
-
-                    document.getElementById('arrayDisplay').innerHTML = output;
-                    for (let i = 0; i < colorArray[tries].length; i++) {
-                        colorArray[tries][i] = data[i];
-                        letterArray[tries][i] = word[i];
-                    }
-                    board.replaceChildren(); // Entfernt alle Kindelemente
-                    for (let row = 0; row < 8; row++) {
-                        for (let col = 0; col < 5; col++) {
-                            const tile = document.createElement('div');
-                            tile.textContent = letterArray[row][col];
-                            tile.classList.add('tile');
-                            if (colorArray[row][col] == 1) tile.classList.add('tileabsent');
-                            if (colorArray[row][col] == 2) tile.classList.add('tilepresent');
-                            if (colorArray[row][col] == 3) tile.classList.add('tilecorrect');
-                            board.appendChild(tile);
-                        }
-                    }
-                    tries++;
-                    */
+            }).then(data => {
 
                     word = '';
                     document.getElementById("guess").value = '';

@@ -79,10 +79,35 @@ app.post("/guess", (req, res) => {
         });
     });
     guessCounter++
-
-
 });
 
+
+app.post("/guessDaily", (req, res) => {
+    const { gameId, guess, playerName } = req.body;
+
+    console.log("Daily ->" + guessCounter)
+
+    if(gameData.submittedWords.size>=6){
+        console.log("Done")
+        res.send("Done")
+        return
+    }
+
+    gameData.submittedWords.set(playerName+""+guessCounter,guess)
+
+
+    fetch('http://localhost:8080/try/' + guess
+    ).then(response => response.json()).then(r  => {
+        //res.send(r);
+        io.emit('updateAll',  {
+            daten: r,
+            word: guess,
+            tries: guessCounter
+
+        });
+    });
+    guessCounter++
+});
 
 let connectedClients = 0;
 
