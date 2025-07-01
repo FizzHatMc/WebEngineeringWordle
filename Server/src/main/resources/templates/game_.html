@@ -19,8 +19,8 @@
         <!-- Keyboard buttons hinzufügen? -->
     </div>
 <!--    <div id="arrayDisplay"></div> Debugzahlen-->
-    <input type="text" autocomplete="off" onchange="tryWord()" name="guess" id="guess">
-    <input type="button" value="Guess" onclick="tryWord()">
+    <input type="text" autocomplete="off" onchange="sendGuessHTTP()" name="guess" id="guess">
+    <input type="button" value="Guess" onclick="sendGuessHTTP()">
     <input type="checkbox" id="dailyCheck">
 
 </div>
@@ -31,18 +31,20 @@
 
 
 </form>
-<script src="/socket.io/socket.io.js"></script>
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 <script>
     const rows = 6;
     const cols = 5;
     const colorArray = [];
     const letterArray = [];
-    var tries = 0;
+    const socket = io();
+    let tries = 0;
+    let word = document.getElementById("guess").value;
 
     const gameId = new URLSearchParams(window.location.search).get('id');
     const port = window.location.port;
     const playerName = new URLSearchParams(window.location.search).get('name'); // Get player name
-    var slider = document.getElementById("dailyCheck");
+    let slider = document.getElementById("dailyCheck");
 
     for (let i = 0; i < rows; i++) {
         colorArray[i] = []; // Erstelle eine neue Zeile (inneres Array)
@@ -52,14 +54,25 @@
             letterArray[i][j] = '';
         }
     }
+
+    socket.on('updateAll', (send) => {
+        updateBoard(send.daten,send.word,send.tries);
+    })
+
     const board = document.querySelector('.wordle-board');
-    var word = document.getElementById("guess").value;
     // erstellt die Tiles
     for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
             const tile = document.createElement('div');
             tile.classList.add('tile');
             board.appendChild(tile);
+        }
+    }
+
+    function updateBoard(data,word,tries){
+        for (let i = 0; i < colorArray[tries].length; i++) {
+            colorArray[tries][i] = data[i];
+            letterArray[tries][i] = word[i];
         }
     }
 
@@ -73,6 +86,7 @@
             fetch(address)
                 .then(response => response.json())
                 .then(data => {
+                    console.log("data ->" + data)
                     let output = '<table>';
                     output += '<tr>'; // Beginne eine neue Zeile
                     for (let i = 0; i < data.length; i++) {
@@ -114,6 +128,8 @@
                 })
             }).then(response => response.json())
                 .then(data => {
+                    console.log("data ->" + data)
+
                     let output = '<table>';
                     output += '<tr>'; // Beginne eine neue Zeile
                     for (let i = 0; i < data.length; i++) {

@@ -11,7 +11,6 @@ const id = process.argv[2] || 1;
 const PORT = parseInt(process.argv[3], 10) || 4000;
 const correctWord = process.argv[4];
 const io = new Server(server, {
-    transports: ["polling"],
     cors: {
         origin: "*",
         methods: ["GET", "POST"]
@@ -21,7 +20,6 @@ const staticPath = path.join(__dirname, '..', 'static');
 console.log('Static files path:', staticPath);
 console.log('game.css exists:', fs.existsSync(path.join(staticPath, 'game.css')));
 
-// Serve static files
 app.use('/static', express.static(staticPath, {
     fallthrough: false // Important: don't fall through to other routes
 }));
@@ -32,7 +30,7 @@ app.use('/static', (req, res) => {
     res.status(404).send('Not found');
 });
 
-app.use(express.json());  // **MUST BE BEFORE your routes**
+app.use(express.json());
 
 if (!id || !PORT || !correctWord) {
     console.error('Sub-server requires id, PORT and CorrectWord arguments.');
@@ -50,7 +48,6 @@ const gameData = {
 }
 
 
-// Handle /game route
 app.get('/game', (req, res) => {
     console.error(gameData.word + " - " + correctWord)
     res.sendFile(path.join(__dirname, '/game_.html'));
@@ -59,7 +56,6 @@ app.get('/game', (req, res) => {
 var guessCounter = 0
 
 app.post("/guess", (req, res) => {
-    console.log("HTTP guess:", req.body);
     const { gameId, guess, playerName } = req.body;
 
     guessCounter++
@@ -72,11 +68,19 @@ app.post("/guess", (req, res) => {
     }
 
     gameData.submittedWords.set(playerName+""+guessCounter,guess)
-    console.log(gameData.submittedWords)
 
 
-    fetch('http://localhost:8080/try/' + guess + "/" + gameData.word).then(r  => res.send(r))
-    io.emit('updateAll', { message: 'Server processed update', guess });
+    fetch('http://localhost:8080/try/' + guess + "/" + gameData.word).then(r  => {
+        //res.send(r);
+        console.log("Test")
+        io.emit('updateAll',  {
+            daten: r,
+            word: guess,
+            tries: guessCounter
+
+        });
+    });
+
 });
 
 
@@ -93,16 +97,14 @@ io.on("connection", (socket) => {
         if (connectedClients <= 0) {
             console.log("No clients left. Sending shutdown signal...");
 
-            // Send signal to another server
             try {
-                await fetch("http://other-server.local/api/shutdown", {
+                await fetch("http://localhost:8080/shutdown/"+id, {
                     method: "POST"
                 });
             } catch (e) {
                 console.error("Failed to notify other server:", e);
             }
 
-            // Kill the server process
             console.log("Shutting down this server...");
             server.close(() => {
                 process.exit(0);
@@ -111,6 +113,6 @@ io.on("connection", (socket) => {
     });
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Sub-server for game ${id} is running on http://localhost:${PORT}/game`);
 })
