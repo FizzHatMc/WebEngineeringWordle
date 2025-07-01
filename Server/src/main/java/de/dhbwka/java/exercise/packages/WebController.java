@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,9 +18,6 @@ public class WebController {
     private static final Logger log = LoggerFactory.getLogger(WebController.class);
     String dailyWord = WordHandler.getRandomWord();
     HashMap<String, GameLobby> subservers = new HashMap<>();
-
-
-
 
     @GetMapping("/reset/new_word")
     public ResponseEntity<String> reset() {
@@ -111,7 +107,7 @@ public class WebController {
             Process process = pb.start();
 
             // Step 4: Log output from the subserver
-            new Thread(() -> {
+             new Thread(() -> {
                 try (BufferedReader reader = new BufferedReader(
                         new InputStreamReader(process.getInputStream()))) {
                     String line;
@@ -142,8 +138,6 @@ public class WebController {
             throw new RuntimeException("Could not start subserver", e);
         }
 
-
-
         subservers.put(gameId, new GameLobby(gameId, subServerPort));
         subservers.get(gameId).joinRequest();
         //log.info("server {} started on port http://localhost:{}/game",gameId,subServerPort);
@@ -173,6 +167,12 @@ public class WebController {
     @GetMapping("/spielbeitritt")
     public String spielbeitritt(/*@RequestParam(name="name",required=true) String name*/) {
         return "join-game";
+    }
+
+    @GetMapping("/shutdown/{id}")
+    public void shutdown(@PathVariable("id") String id){
+        subservers.remove(id);
+
     }
 
     @GetMapping("/login")
