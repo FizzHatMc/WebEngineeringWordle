@@ -76,8 +76,8 @@
             letterArray[tries][i] = word[i];
         }
         board.replaceChildren(); // Entfernt alle Kindelemente
-        for (let row = 0; row < 8; row++) {
-            for (let col = 0; col < 5; col++) {
+        for (let row = 0; row < rows; row++) {
+            for (let col = 0; col < cols; col++) {
                 const tile = document.createElement('div');
                 tile.textContent = letterArray[row][col];
                 tile.classList.add('tile');
@@ -92,7 +92,6 @@
     function sendGuessHTTP() {
         word = document.getElementById("guess").value;
         slider = document.getElementById("dailyCheck").checked;
-        console.log(slider)
         if(word.length!==5)return
         document.getElementById("guess").value = "";
         if(slider){
@@ -105,7 +104,9 @@
                     guess: word,
                     playerName: playerName,
                 })
-            }).then(data => {
+              }).then(response => response.json())
+                .then(data => {
+                    console.log("GameOver -> " + data.gameOver)
                     word = '';
                     document.getElementById("guess").value = "";
                 })
@@ -119,8 +120,9 @@
                     guess: word,
                     playerName: playerName,
                 })
-            }).then(data => {
-
+            }).then(response => response.json())
+                .then(data => {
+                    console.log("GameOver -> " + data)
                     word = '';
                     document.getElementById("guess").value = "";
                 })

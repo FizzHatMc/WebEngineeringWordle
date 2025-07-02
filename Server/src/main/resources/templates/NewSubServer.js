@@ -60,9 +60,13 @@ app.post("/guess", (req, res) => {
 
     console.log(guessCounter)
 
-    if(gameData.submittedWords.size>=6){
+    if(gameData.submittedWords.size>=5){
         console.log("Done")
-        res.send("Done")
+        gameData.gameOver=true
+        res.send({
+            gameOver: gameData.gameOver,
+            won: false
+        });
         return
     }
 
@@ -70,13 +74,24 @@ app.post("/guess", (req, res) => {
 
 
     fetch('http://localhost:8080/try/' + guess + "/" + gameData.word).then(response => response.json()).then(r  => {
-        //res.send(r);
+        if(r.toString().replaceAll(" ","") == "3,3,3,3,3"){
+            console.log("Correct word ")
+            gameData.gameOver = true
+
+            res.send({
+                gameOver: gameData.gameOver,
+                won: true
+            });
+
+        }
+
         io.emit('updateAll',  {
             daten: r,
             word: guess,
             tries: guessCounter
 
         });
+
     });
     guessCounter++
 });
@@ -87,9 +102,13 @@ app.post("/guessDaily", (req, res) => {
 
     console.log("Daily ->" + guessCounter)
 
-    if(gameData.submittedWords.size>=6){
+    if(gameData.submittedWords.size>=5){
         console.log("Done")
-        res.send("Done")
+        gameData.gameOver=true
+        res.send({
+            gameOver: gameData.gameOver,
+            won: false
+        });
         return
     }
 
@@ -98,7 +117,17 @@ app.post("/guessDaily", (req, res) => {
 
     fetch('http://localhost:8080/try/' + guess
     ).then(response => response.json()).then(r  => {
-        //res.send(r);
+
+        if(r.toString().replaceAll(" ","") == "3,3,3,3,3"){
+            console.log("Correct word ")
+            gameData.gameOver = true
+
+            res.send({
+                gameOver: gameData.gameOver,
+                won: true
+            });
+        }
+
         io.emit('updateAll',  {
             daten: r,
             word: guess,
