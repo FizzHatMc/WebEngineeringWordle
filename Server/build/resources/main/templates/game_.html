@@ -94,6 +94,7 @@
         slider = document.getElementById("dailyCheck").checked;
         console.log(slider)
         if(word.length!==5)return
+        document.getElementById("guess").value = "";
         if(slider){
             console.log("Daily")
             fetch("/guessDaily",{
@@ -106,9 +107,9 @@
                 })
             }).then(data => {
                     word = '';
-                    document.getElementById("guess").value = '';
+                    document.getElementById("guess").value = "";
                 })
-                .catch(error => console.error('Fehler beim Abrufen der Daten:', error));
+                .catch(error => console.error('Fehler beim Abrufen der Daten (bei Daily):', error));
         }else{
             fetch("/guess", {
                 method: "POST",
@@ -119,10 +120,11 @@
                     playerName: playerName,
                 })
             }).then(data => {
+
                     word = '';
-                    document.getElementById("guess").value = '';
+                    document.getElementById("guess").value = "";
                 })
-                .catch(error => console.error('Fehler beim Abrufen der Daten:', error));
+                .catch(error => console.error('Fehler beim Abrufen der Daten (in tryWord):', error));
         }
     }
 
