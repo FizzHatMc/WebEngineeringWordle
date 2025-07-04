@@ -27,7 +27,7 @@ public class WebController {
 
     @GetMapping("/getNewWord")
     public ResponseEntity<String> randomWord() {
-        return ResponseEntity.ok(WordHandler.getRandomWord());
+        return ResponseEntity.ok("{\"word\":" + "\"" + WordHandler.getRandomWord() + "\"" + "}");
     }
 
     @GetMapping("/reset")
@@ -59,9 +59,9 @@ public class WebController {
     @GetMapping("/create-game")
     public ResponseEntity<String> create_game() throws IOException {
         String gameId = generateID();
-        String newWord = WordHandler.getRandomWord();
         int subServerPort = 4001 + subservers.size();
         // Start the sub-server as a separate Node.js process
+        String lobbytype = "1v1";
         try {
 
             String nodeCommand;
@@ -94,7 +94,7 @@ public class WebController {
                     jsFilePath,
                     gameId,
                     String.valueOf(subServerPort),
-                    newWord
+                    lobbytype
             };
 
 
