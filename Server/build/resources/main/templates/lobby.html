@@ -11,14 +11,15 @@
 
 <div class="container">
 
-    <h1>WORDLE<br><em>online</em></h1>
-    <p id="anweisung">Erstelle ein neues Spiel oder trete deinen Freunden bei!</p>
+    <a href="/">
+        <h1>WORDLE<br><em>online</em></h1>
+    </a>
+    <p>Erstelle ein neues Spiel oder trete deinen Freunden bei!</p>
 
     <input type="text" id="name-input" placeholder="Gib hier deinen Namen an">
-    <button id="create-game" onclick="createGame()">Create Game</button>
+    <button class="menu-button" id="create-game" onclick="createGame()">Create Game</button>
 <!--    <input type="text" id="game-id-input" placeholder="Enter Game ID to Join" >-->
-    <button id="join-game" onclick="route2joinGame()">Join Game</button>
-<!--    <a href="join-game.html">Join Game</a>-->
+    <button class="menu-button" id="join-game" onclick="route2joinGame()">Join Game</button>
 
     <div id="error-message" class="error-message"></div>
 
@@ -72,7 +73,7 @@
             showError('Please enter your name.');
             return;
         }
-        document.location=('/spielbeitritt?name=' + playerName);
+        document.location=('/spielbeitritt?name=' + encodeURIComponent(playerName));
     }
 
 

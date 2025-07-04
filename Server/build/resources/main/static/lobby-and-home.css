@@ -8,6 +8,10 @@ body {
     background-color: #D5FFF3;
 }
 
+a {
+    text-decoration: none;
+}
+
 .container {
     flex-direction: column;
     display: flex;
@@ -23,6 +27,11 @@ footer {
     background-color: #C7EDE4;
     color: #af9ab2;
     text-align: center;
+}
+
+.container h1:hover {
+    background-color: #672A4E;
+    color: white;
 }
 
 h1 {
@@ -53,7 +62,7 @@ input::placeholder{
     text-align: center;
 }
 
-#anweisung {
+.container p {
     font-size: x-large;
     color: #672A4E;
 }
@@ -67,7 +76,7 @@ input {
     border: 3px solid #672A4E;
 }
 
-a, button {
+.menu-button {
     margin: 10px;
     background-color: #672A4E;
     padding: 5px;
@@ -78,7 +87,7 @@ a, button {
     text-decoration: none;
 }
 
-a:hover, button:hover {
+.menu-button:hover {
     background-color: #820b8a;
     color: #D5FFF3;
 }

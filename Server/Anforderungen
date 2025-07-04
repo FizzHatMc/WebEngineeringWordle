@@ -17,4 +17,13 @@ Was der Main Server (WebController) von den Subservern braucht:
 - Nachricht, wenn der Subserver gelöscht werden kann
 - Schnittstellen sind in WebController.java zu finden
 
-Subserver startet aus irgendeinem Grund nicht auf dem richtigen Port / Socket
+
+
+
+
+1v1:
+
+2 Spielfelder (jeweiliger spieler)
+Beim erstellen der lobby (in lobby.html) soll gefragt werden ob 1v1 oder team
+updateBoard methode muss geupdated werden dafür
+z.b. zwei listen user1 = {"guess1","guess2"...} user = {"guess","milch",...}

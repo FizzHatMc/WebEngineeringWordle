@@ -4,12 +4,22 @@ const { Server } = require('socket.io');
 const http = require('http');
 const path = require('path'); // Add this line
 const fs = require('fs');
+const {response} = require("express");
 
 const app = express();
 const server = http.createServer(app);
 const id = process.argv[2] || 1;
 const PORT = parseInt(process.argv[3], 10) || 4000;
-const correctWord = process.argv[4];
+const lobbytype = process.argv[4];
+
+const map = new Map();
+const gameData = {
+    players: [],
+    word: "",
+    word2: "",
+    gameOver: false,
+    submittedWords: map
+}
 const io = new Server(server, {
     cors: {
         origin: "*",
@@ -17,39 +27,42 @@ const io = new Server(server, {
     }
 });
 const staticPath = path.join(__dirname, '..', 'static');
-console.log('Static files path:', staticPath);
-console.log('game.css exists:', fs.existsSync(path.join(staticPath, 'game.css')));
-
 app.use('/static', express.static(staticPath, {
-    fallthrough: false // Important: don't fall through to other routes
+    fallthrough: false
 }));
-
-// Error handler for missing static files
 app.use('/static', (req, res) => {
     console.error(`Static file not found: ${req.path}`);
     res.status(404).send('Not found');
 });
-
 app.use(express.json());
-
-if (!id || !PORT || !correctWord) {
-    console.error('Sub-server requires id, PORT and CorrectWord arguments.');
+if (!id || !PORT) {
+    console.error('Sub-server requires id, PORT arguments.');
 
     process.exit(1);
 }
 
-const map = new Map();
 
-const gameData = {
-    players: [],
-    word: correctWord,
-    gameOver: false,
-    submittedWords: map
+
+
+fetch("http://localhost:8080/getNewWord")
+    .then(response => response.json())
+    .then(data => {
+        console.log("NewWord -> " + data.word)
+        gameData.word = data
+    })
+
+if(lobbytype==="1v1"){
+    fetch("http://localhost:8080/getNewWord")
+        .then(response => response.json())
+        .then(data => {
+            console.log("NewWord -> " + data.word)
+            gameData.word2
+                = data
+        })
 }
 
 
 app.get('/game', (req, res) => {
-    console.error(gameData.word + " - " + correctWord)
     res.sendFile(path.join(__dirname, '/game_.html'));
 });
 
@@ -74,7 +87,7 @@ app.post("/guess", (req, res) => {
 
 
     fetch('http://localhost:8080/try/' + guess + "/" + gameData.word).then(response => response.json()).then(r  => {
-        if(r.toString().replaceAll(" ","") == "3,3,3,3,3"){
+        if(r.toString().replaceAll(" ","") === "3,3,3,3,3"){
             console.log("Correct word ")
             gameData.gameOver = true
 
@@ -118,7 +131,7 @@ app.post("/guessDaily", (req, res) => {
     fetch('http://localhost:8080/try/' + guess
     ).then(response => response.json()).then(r  => {
 
-        if(r.toString().replaceAll(" ","") == "3,3,3,3,3"){
+        if(r.toString().replaceAll(" ","") === "3,3,3,3,3"){
             console.log("Correct word ")
             gameData.gameOver = true
 
