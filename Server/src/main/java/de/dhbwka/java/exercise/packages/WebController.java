@@ -56,12 +56,16 @@ public class WebController {
         return "game_";
     }
 
-    @GetMapping("/create-game")
-    public ResponseEntity<String> create_game() throws IOException {
+    @GetMapping("/create-game/{modi}")
+    public ResponseEntity<String> create_game(@PathVariable("modi") String modi) throws IOException {
         String gameId = generateID();
+        String lobbytype = "1v1";
+        if(modi.equals("team")){
+            lobbytype="team";
+        }
         int subServerPort = 4001 + subservers.size();
         // Start the sub-server as a separate Node.js process
-        String lobbytype = "1v1";
+
         try {
 
             String nodeCommand;

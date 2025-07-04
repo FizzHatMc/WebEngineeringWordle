@@ -31,10 +31,14 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
+    public UserDetailsService userDetailsService() { // mit dem Login kann man das daily wort resetten
         User.UserBuilder users = User.withDefaultPasswordEncoder();
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
         manager.createUser(users.username("admin").password("password").roles("USER","ADMIN").build());
+        manager.createUser(users.username("jonas").password("password").roles("USER","ADMIN").build());
+        manager.createUser(users.username("marcel").password("password").roles("USER","ADMIN").build());
+        manager.createUser(users.username("killian").password("password").roles("USER","ADMIN").build());
+        manager.createUser(users.username("jonathan").password("password").roles("USER","ADMIN").build());
         return manager;
     }
 }
