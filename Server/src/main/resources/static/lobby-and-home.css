@@ -8,8 +8,20 @@ body {
     background-color: #D5FFF3;
 }
 
-a {
+.container a {
     text-decoration: none;
+}
+
+footer a {
+    color: #af9ab2;
+}
+
+.impressum p {
+    text-align: center;
+}
+
+.impressum a {
+    color: black;
 }
 
 .container {
