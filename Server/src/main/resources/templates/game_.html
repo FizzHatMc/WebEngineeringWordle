@@ -141,41 +141,24 @@
     function darkmode(){
         if(sliderDM.checked){
             document.body.style.backgroundColor = "#001536"; // nur für Augengesundheits-Zwecke
-            let tiles = document.getElementsByClassName("tile"); // nur für Augengesundheits-Zwecke
-            for(let tile of tiles){
-                tile.style.backgroundColor = "#4e5259";
-            }
-            tiles = document.getElementsByClassName("tilepresent"); // nur für Augengesundheits-Zwecke
-            for(let tile of tiles){
-                tile.style.backgroundColor = "#968a00";
-            }
-            tiles = document.getElementsByClassName("tilecorrect"); // nur für Augengesundheits-Zwecke
-            for(let tile of tiles){
-                tile.style.backgroundColor = "#077a33";
-            }
-            tiles = document.getElementsByClassName("tileabsent"); // nur für Augengesundheits-Zwecke
-            for(let tile of tiles){
-                tile.style.backgroundColor = "#630012";
-            }
+            changeBackground("tile","#4e5259");
+            changeBackground("tilepresent","#968a00");
+            changeBackground("tilecorrect","#077a33");
+            changeBackground("tileabsent","#630012");
         }else{
             document.body.style.backgroundColor = "white";
-            let tiles = document.getElementsByClassName("tile"); // nur für Augengesundheits-Zwecke
-            for(let tile of tiles){
-                tile.style.backgroundColor = "#D5FFF3";
-            }
-            tiles = document.getElementsByClassName("tilepresent"); // nur für Augengesundheits-Zwecke
-            for(let tile of tiles){
-                tile.style.backgroundColor = "#FFE058";
-            }
-            tiles = document.getElementsByClassName("tilecorrect"); // nur für Augengesundheits-Zwecke
-            for(let tile of tiles){
-                tile.style.backgroundColor = "#76E66C";
-            }
-            tiles = document.getElementsByClassName("tileabsent"); // nur für Augengesundheits-Zwecke
-            for(let tile of tiles){
-                tile.style.backgroundColor = "#D6CBD7";
-            }
+            changeBackground("tile","#D5FFF3");
+            changeBackground("tilepresent","#FFE058");
+            changeBackground("tilecorrect","#76E66C");
+            changeBackground("tileabsent","#D6CBD7");
         }
+    }
+
+    function changeBackground(classname, color){
+    tiles = document.getElementsByClassName(classname);
+            for(let tile of tiles){
+                tile.style.backgroundColor = color;
+            }
     }
 
 </script>
