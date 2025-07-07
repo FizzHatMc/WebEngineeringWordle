@@ -10,6 +10,11 @@
     <a id="link2home" href="http://youtu.be/dQw4w9WgXcQ">
         <h1>WORDLE ONLINE</h1>
     </a>
+    <div>
+        <input type="checkbox" id="darkMode" onclick="darkmode()">
+        <label for="darkMode">darkmode</label>
+    </div>
+
 </nav>
 <div class="game">
     <div class="wordle-board">
@@ -88,6 +93,7 @@
                 board.appendChild(tile);
             }
         }
+        darkmode();
     }
 
     function sendGuessHTTP() {
@@ -128,6 +134,47 @@
                     document.getElementById("guess").value = "";
                 })
                 .catch(error => console.error('Fehler beim Abrufen der Daten (in tryWord):', error));
+        }
+    }
+
+    let sliderDM = document.getElementById("darkMode");
+    function darkmode(){
+        if(sliderDM.checked){
+            document.body.style.backgroundColor = "#001536"; // nur für Augengesundheits-Zwecke
+            let tiles = document.getElementsByClassName("tile"); // nur für Augengesundheits-Zwecke
+            for(let tile of tiles){
+                tile.style.backgroundColor = "#4e5259";
+            }
+            tiles = document.getElementsByClassName("tilepresent"); // nur für Augengesundheits-Zwecke
+            for(let tile of tiles){
+                tile.style.backgroundColor = "#968a00";
+            }
+            tiles = document.getElementsByClassName("tilecorrect"); // nur für Augengesundheits-Zwecke
+            for(let tile of tiles){
+                tile.style.backgroundColor = "#077a33";
+            }
+            tiles = document.getElementsByClassName("tileabsent"); // nur für Augengesundheits-Zwecke
+            for(let tile of tiles){
+                tile.style.backgroundColor = "#630012";
+            }
+        }else{
+            document.body.style.backgroundColor = "white";
+            let tiles = document.getElementsByClassName("tile"); // nur für Augengesundheits-Zwecke
+            for(let tile of tiles){
+                tile.style.backgroundColor = "#D5FFF3";
+            }
+            tiles = document.getElementsByClassName("tilepresent"); // nur für Augengesundheits-Zwecke
+            for(let tile of tiles){
+                tile.style.backgroundColor = "#FFE058";
+            }
+            tiles = document.getElementsByClassName("tilecorrect"); // nur für Augengesundheits-Zwecke
+            for(let tile of tiles){
+                tile.style.backgroundColor = "#76E66C";
+            }
+            tiles = document.getElementsByClassName("tileabsent"); // nur für Augengesundheits-Zwecke
+            for(let tile of tiles){
+                tile.style.backgroundColor = "#D6CBD7";
+            }
         }
     }
 

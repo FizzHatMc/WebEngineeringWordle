@@ -74,7 +74,7 @@ app.post("/guess", (req, res) => {
     const { gameId, guess, playerName } = req.body;
 
     console.log(guessCounter)
-
+    console.log(req.body)
     if(gameData.submittedWords.size>=5){
         console.log("Done")
         gameData.gameOver=true

@@ -48,15 +48,18 @@ fetch("http://localhost:8080/getNewWord")
     .then(response => response.json())
     .then(data => {
         console.log("NewWord -> " + data.word)
-        gameData.word = data
+        gameData.word = data.word
+
+
     })
 
 if(lobbytype==="1v1"){
     fetch("http://localhost:8080/getNewWord")
         .then(response => response.json())
         .then(data => {
-            console.log("NewWord -> " + data.word)
-            gameData.word2 = data
+            console.log("NewWord2 -> " + data.word)
+            gameData.word2 = data.word
+
         })
 }
 
@@ -71,7 +74,7 @@ app.post("/guess", (req, res) => {
     const { gameId, guess, playerName } = req.body;
 
     console.log(guessCounter)
-
+    console.log(req.body)
     if(gameData.submittedWords.size>=5){
         console.log("Done")
         gameData.gameOver=true
