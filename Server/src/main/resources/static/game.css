@@ -102,6 +102,10 @@ input[type=button]:hover {
     color: #D5FFF3;
 }
 
+footer a {
+    color: #af9ab2;
+}
+
 footer {
     position: fixed;
     left: 0;

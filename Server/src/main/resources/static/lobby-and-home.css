@@ -12,22 +12,23 @@ body {
     text-decoration: none;
 }
 
-footer a {
-    color: #af9ab2;
-}
-
 .impressum p {
     text-align: center;
+    color: #672A4E;
 }
 
 .impressum a {
-    color: black;
+    color: #672A4E;
 }
 
 .container {
     flex-direction: column;
     display: flex;
     align-items: center;
+}
+
+footer a {
+    color: #af9ab2;
 }
 
 footer {
