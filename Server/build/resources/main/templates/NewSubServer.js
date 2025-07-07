@@ -56,8 +56,7 @@ if(lobbytype==="1v1"){
         .then(response => response.json())
         .then(data => {
             console.log("NewWord -> " + data.word)
-            gameData.word2
-                = data
+            gameData.word2 = data
         })
 }
 
