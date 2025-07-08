@@ -14,13 +14,16 @@
     <a href="/">
         <h1>WORDLE<br><em>online</em></h1>
     </a>
-    <p>Erstelle ein neues Spiel oder trete deinen Freunden bei!</p>
+    <p id="anweisung">Erstelle ein neues Spiel oder trete deinen Freunden bei!</p>
+
+    <p id="modus-anweisung" style="display: none">Wähle den Modus!</p>
+    <button class ="menu-button" id="change-mode" style="display: none" onclick="changeMode()">1v1</button>
+    <button class="menu-button" id="create-game" style="display: none" onclick="createGame()">Spiel erstellen</button>
 
     <input type="text" id="name-input" placeholder="Gib hier deinen Namen an">
-    <button class="menu-button" id="create-game" onclick="createGame()">Create Game</button>
-<!--    <input type="text" id="game-id-input" placeholder="Enter Game ID to Join" >-->
-    <button class="menu-button" id="join-game" onclick="route2joinGame()">Join Game</button>
-    <button class ="menu-button" id="change-mode" onclick="changeMode()">Mode: 1v1</button>
+    <button class="menu-button" id="show-create-game" onclick="showCreateGame()">Spiel erstellen</button>
+    <!--    <input type="text" id="game-id-input" placeholder="Enter Game ID to Join" >-->
+    <button class="menu-button" id="join-game" onclick="route2joinGame()">Spiel beitreten</button>
     <div id="error-message" class="error-message"></div>
 
 </div>
@@ -36,6 +39,21 @@
 
     function showError(message) {
         errorMessageDisplay.textContent = message;
+    }
+
+    function showCreateGame() {
+        const playerName = nameInput.value.trim();
+        if (!playerName) {
+            showError('Bitte einen Namen angeben.');
+            return;
+        }
+        document.getElementById("create-game").style.display = "inline";
+        document.getElementById("change-mode").style.display = "inline";
+        document.getElementById("modus-anweisung").style.display = "block";
+        document.getElementById("join-game").style.display = "none";
+        document.getElementById("anweisung").style.display = "none";
+        document.getElementById("name-input").style.display = "none";
+        document.getElementById("show-create-game").style.display = "none";
     }
 
     function navigateToGame(gameId, port, playerName) {
@@ -78,12 +96,12 @@
     }
 
     function changeMode(){
-        if(modus=="1v1"){
-            modus="team";
+        if(modus==="1v1"){
+            modus="Team";
         }else{
             modus="1v1";
         }
-        document.getElementById("change-mode").innerText="Modus: "+modus;
+        document.getElementById("change-mode").innerText = modus;
     }
 
 
