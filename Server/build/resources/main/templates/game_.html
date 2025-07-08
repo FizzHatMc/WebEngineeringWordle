@@ -141,10 +141,11 @@
     function darkmode(){
         if(sliderDM.checked){
             document.body.style.backgroundColor = "#001536"; // nur für Augengesundheits-Zwecke
-            changeBackground("tile","#4e5259");
+            changeBackground("tile","#292929");
             changeBackground("tilepresent","#968a00");
             changeBackground("tilecorrect","#077a33");
-            changeBackground("tileabsent","#630012");
+            //changeBackground("tileabsent","#630012");
+            changeBackground("tileabsent","#4e5259");
         }else{
             document.body.style.backgroundColor = "white";
             changeBackground("tile","#D5FFF3");
@@ -155,10 +156,10 @@
     }
 
     function changeBackground(classname, color){
-    tiles = document.getElementsByClassName(classname);
-            for(let tile of tiles){
-                tile.style.backgroundColor = color;
-            }
+        tiles = document.getElementsByClassName(classname);
+        for(let tile of tiles){
+           tile.style.backgroundColor = color;
+        }
     }
 
 </script>
