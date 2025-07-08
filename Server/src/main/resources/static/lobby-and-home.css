@@ -8,8 +8,22 @@ body {
     background-color: #D5FFF3;
 }
 
+.container div {
+    text-align: center;
+    flex-direction: column;
+    align-items: center;
+}
+
 a {
     text-decoration: none;
+}
+
+.hidden {
+    display: none;
+}
+
+.visible {
+    display: flex;
 }
 
 .container {
