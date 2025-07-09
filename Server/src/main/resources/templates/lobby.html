@@ -35,6 +35,7 @@
             <input type="radio" name="modus" id="team" value="team" />
             <label for="team">Team</label>
         </div>
+        <button class="toggle-button is-active" id="daily" onClick="toggleDaily()">Daily: aktiv</button>
         <button class="menu-button" id="create-game" onclick="createGame()">Spiel erstellen</button>
     </div>
 
@@ -48,6 +49,7 @@
     const nameInput = document.getElementById('name-input');
     const errorMessageDisplay = document.getElementById('error-message');
     let modus="1v1";
+    let daily="daily";
 
     function showError(message) {
         errorMessageDisplay.textContent = message;
@@ -65,10 +67,26 @@
 
     function navigateToGame(gameId, port, playerName) {
         const targetHost = window.location.hostname; // Keeps same domain (e.g., localhost or example.com)
-        const targetPath = "/game?id="+gameId+"&name="+encodeURIComponent(playerName);  // Change to the desired path on that server if needed
+        let dailyAnhang = ""
+        if(daily){
+            dailyAnhang = "&daily=" + daily;
+        }
+        const targetPath = "/game?id="+gameId+"&name="+encodeURIComponent(playerName)+dailyAnhang;  // Change to the desired path on that server if needed
 
         // Navigate to the new port
         window.location.href = `http://${targetHost}:${port}${targetPath}`;
+    }
+
+    function toggleDaily(){
+        if(daily){
+            daily = "";
+            document.getElementById("daily").innerHTML = "Daily: aus";
+            document.getElementById("daily").className = "toggle-button is-off";
+        } else {
+            daily = "oiiai";
+            document.getElementById("daily").innerHTML = "Daily: aktiv";
+            document.getElementById("daily").className = "toggle-button is-active";
+        }
     }
 
     function createGame(){

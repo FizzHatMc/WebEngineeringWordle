@@ -21,7 +21,7 @@
 <!--    <div id="arrayDisplay"></div> Debugzahlen-->
     <input type="text" autocomplete="off" onchange="sendGuessHTTP()" name="guess" id="guess">
     <input type="button" value="Guess" onclick="sendGuessHTTP()">
-    <input type="checkbox" id="dailyCheck">
+<!--    <input type="checkbox" id="dailyCheck">-->
 
 </div>
 
@@ -43,7 +43,7 @@
     const port = window.location.port;
     const host = window.location.hostname;
     const playerName = new URLSearchParams(window.location.search).get('name'); // Get player name
-    let slider = document.getElementById("dailyCheck");
+    const slider = new URLSearchParams(window.location.search).get('daily');
 
     document.getElementById("link2home").setAttribute("href",`http://${host}:8080`)
 
@@ -92,8 +92,7 @@
 
     function sendGuessHTTP() {
         word = document.getElementById("guess").value;
-        slider = document.getElementById("dailyCheck").checked;
-        if(word.length!==5)return
+        if(word.length!==5) return;
         document.getElementById("guess").value = "";
         if(slider){
             console.log("Daily")

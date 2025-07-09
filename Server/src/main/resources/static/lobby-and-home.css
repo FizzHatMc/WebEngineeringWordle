@@ -101,6 +101,25 @@ input {
     text-decoration: none;
 }
 
+.toggle-button {
+    margin: 10px;
+    padding: 5px;
+    border-radius: 10px;
+    font-size: x-large;
+    border: none;
+    text-decoration: none;
+}
+
+.is-off {
+    background-color: #af9ab2;
+    color: gray;
+}
+
+.is-active {
+    color: #D5FFF3;
+    background-color: #672A4E;
+}
+
 .menu-button:hover {
     background-color: #820b8a;
     color: #D5FFF3;
