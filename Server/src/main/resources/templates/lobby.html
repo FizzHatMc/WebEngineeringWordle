@@ -14,22 +14,29 @@
     <a href="/">
         <h1>WORDLE<br><em>online</em></h1>
     </a>
+    <div id="error-message" class="error-message"></div>
 
     <div id="anweisung" class="visible">
         <p>Erstelle ein neues Spiel oder trete deinen Freunden bei!</p>
         <input type="text" id="name-input" placeholder="Gib hier deinen Namen an">
-        <button class="menu-button" id="show-create-game" onclick="showCreateGame()">Spiel erstellen</button>
-        <!--    <input type="text" id="game-id-input" placeholder="Enter Game ID to Join" >-->
-        <button class="menu-button" id="join-game" onclick="route2joinGame()">Spiel beitreten</button>
+        <div>
+            <button class="menu-button" id="show-create-game" onclick="showCreateGame()">Spiel erstellen</button>
+            <!--    <input type="text" id="game-id-input" placeholder="Enter Game ID to Join" >-->
+            <button class="menu-button" id="join-game" onclick="route2joinGame()">Spiel beitreten</button>
+        </div>
     </div>
 
     <div id="modus-anweisung" class="hidden">
         <p>Wähle den Modus!</p>
-        <button class ="menu-button" id="change-mode" onclick="changeMode()">1v1</button>
+        <!--        <button class ="menu-button" id="change-mode" onclick="changeMode()">1v1</button>-->
+        <div id="moduswahl">
+            <input type="radio" name="modus" id="1v1" value="1v1" checked />
+            <label for="1v1">1v1</label>
+            <input type="radio" name="modus" id="team" value="team" />
+            <label for="team">Team</label>
+        </div>
         <button class="menu-button" id="create-game" onclick="createGame()">Spiel erstellen</button>
     </div>
-
-    <div id="error-message" class="error-message"></div>
 
 </div>
 
@@ -67,10 +74,12 @@
     function createGame(){
         console.log("Button pressed")
         const playerName = nameInput.value.trim();
+        modus = document.querySelector('input[name = "modus"]:checked').value;
         if (!playerName) {
             showError('Please enter your name.');
             return;
         }
+        console.log(modus);
         fetch('/create-game/'+modus)
             .then(response => response.json())
             .then(data => {
@@ -94,16 +103,6 @@
         }
         document.location=('/spielbeitritt?name=' + encodeURIComponent(playerName));
     }
-
-    function changeMode(){
-        if(modus==="1v1"){
-            modus="Team";
-        }else{
-            modus="1v1";
-        }
-        document.getElementById("change-mode").innerText = modus;
-    }
-
 
 </script>
 </body>

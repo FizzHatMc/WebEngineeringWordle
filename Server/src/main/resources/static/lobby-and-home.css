@@ -105,3 +105,34 @@ input {
     background-color: #820b8a;
     color: #D5FFF3;
 }
+
+input[type="radio"]{
+    display: none;
+}
+
+label {
+    margin: 10px;
+    /*background-color: #C7EDE4;*/
+    background-color: #af9ab2;
+    padding: 5px;
+    border-radius: 10px;
+    font-size: x-large;
+    color: #672A4E;
+    border: none;
+    text-decoration: none;
+}
+
+#moduswahl {
+    margin: 10px;
+}
+
+input[type="radio"]:checked + label{
+    /*background-color: #C7EDE4;*/
+    background-color: #af9ab2;
+    border: 3px solid #672A4E;
+}
+
+label:hover {
+    border: 3px solid #820b8a;
+    /*color: #D5FFF3;*/
+}

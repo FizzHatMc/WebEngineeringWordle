@@ -15,11 +15,11 @@
     <h1>WORDLE<br><em>online</em></h1>
   </a>
 
-<!--  <input type="text" id="name-input" placeholder="Gib hier deinen Namen an">-->
+  <div id="error-message" class="error-message"></div>
+
+  <input type="text" id="name-input" style="display: none" placeholder="Gib hier deinen Namen an">
   <input type="text" id="game-id-input" placeholder="Bitte Spiel-ID eingeben">
   <button class="menu-button" id="join-game" onclick="joinGame()">Join Game</button>
-
-  <div id="error-message" class="error-message"></div>
 
 </div>
 
@@ -29,7 +29,7 @@
 
 <script>
   const gameIdInput = document.getElementById('game-id-input');
-  // const nameInput = document.getElementById('name-input');
+  const nameInput = document.getElementById('name-input');
   const errorMessageDisplay = document.getElementById('error-message');
 
   function showError(message) {
@@ -49,11 +49,15 @@
 
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    const playerName = urlParams.get('name');
-    // const playerName = nameInput.value.trim();
+    let playerName = urlParams.get('name');
+
+    if(!playerName){
+      playerName = nameInput.value.trim();
+    }
 
     if (!playerName) {
       showError('No name ¯\\_(ツ)_/¯');
+      document.getElementById("name-input").style.display = "block";
       return;
     }
     if (!gameId) {
