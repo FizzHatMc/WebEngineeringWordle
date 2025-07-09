@@ -106,8 +106,13 @@ input {
     padding: 5px;
     border-radius: 10px;
     font-size: x-large;
-    border: none;
+    /*border: none;*/
+    border: 3px solid transparent;
     text-decoration: none;
+}
+
+.toggle-button:hover {
+    border: 3px solid lightgray;
 }
 
 .is-off {
@@ -137,7 +142,7 @@ label {
     border-radius: 10px;
     font-size: x-large;
     color: #672A4E;
-    border: none;
+    border: 3px solid transparent;
     text-decoration: none;
 }
 
