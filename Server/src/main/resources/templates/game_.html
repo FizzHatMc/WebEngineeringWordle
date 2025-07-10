@@ -19,8 +19,9 @@
         <!-- Keyboard buttons hinzufügen? -->
     </div>
 <!--    <div id="arrayDisplay"></div> Debugzahlen-->
-    <input type="text" autocomplete="off" onchange="sendGuessHTTP()" name="guess" id="guess">
-    <input type="button" value="Guess" onclick="sendGuessHTTP()">
+    <input id="guess" type="text" autocomplete="off" onchange="sendGuessHTTP()" name="guess" id="guess">
+    <input id="send-guess" type="button" value="Guess" onclick="sendGuessHTTP()">
+    <p id="gameover" style="display: none">Game Over!</p>
 <!--    <input type="checkbox" id="dailyCheck">-->
 </div>
 
@@ -106,6 +107,7 @@
               }).then(response => response.json())
                 .then(data => {
                     console.log("GameOver -> " + data.gameOver)
+                    gameOverScreen();
                     word = '';
                     document.getElementById("guess").value = "";
                 })
@@ -121,12 +123,19 @@
                 })
             }).then(response => response.json())
                 .then(data => {
-                    console.log("GameOver -> " + data)
+                    console.log("GameOver -> " + data);
+                    gameOverScreen();
                     word = '';
                     document.getElementById("guess").value = "";
                 })
                 .catch(error => console.error('Fehler beim Abrufen der Daten (in tryWord):', error));
         }
+    }
+
+    function gameOverScreen(){
+        document.getElementById("guess").style.display = "none";
+        document.getElementById("send-guess").style.display = "none";
+        document.getElementById("gameover").style.display = "block";
     }
 
 </script>
