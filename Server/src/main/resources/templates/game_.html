@@ -1,7 +1,9 @@
 <!DOCTYPE html>
+<html lang="de">
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wordle</title>
     <link rel="stylesheet" type="text/css" href="/static/game.css">
 </head>
@@ -83,9 +85,9 @@
                 const tile = document.createElement('div');
                 tile.textContent = letterArray[row][col];
                 tile.classList.add('tile');
-                if (colorArray[row][col] == 1) tile.classList.add('tileabsent');
-                if (colorArray[row][col] == 2) tile.classList.add('tilepresent');
-                if (colorArray[row][col] == 3) tile.classList.add('tilecorrect');
+                if (colorArray[row][col] === 1) tile.classList.add('tileabsent');
+                if (colorArray[row][col] === 2) tile.classList.add('tilepresent');
+                if (colorArray[row][col] === 3) tile.classList.add('tilecorrect');
                 board.appendChild(tile);
             }
         }
