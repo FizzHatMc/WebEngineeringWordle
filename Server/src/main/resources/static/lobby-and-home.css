@@ -43,7 +43,7 @@ footer {
     text-align: center;
 }
 
-.container h1:hover {
+a h1:hover {
     background-color: #672A4E;
     color: white;
 }

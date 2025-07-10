@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Wordle</title>
-    <link rel="stylesheet" type="text/css" href="/static/game.css"></head>
+    <link rel="stylesheet" type="text/css" href="/static/game.css">
+</head>
 
 <body>
 <nav id="navbar">
@@ -19,7 +20,7 @@
         <!-- Keyboard buttons hinzufügen? -->
     </div>
 <!--    <div id="arrayDisplay"></div> Debugzahlen-->
-    <input id="guess" type="text" autocomplete="off" onchange="sendGuessHTTP()" name="guess" id="guess">
+    <input type="text" autocomplete="off" onchange="sendGuessHTTP()" name="guess" id="guess">
     <input id="send-guess" type="button" value="Guess" onclick="sendGuessHTTP()">
     <p id="gameover" style="display: none">Game Over!</p>
 <!--    <input type="checkbox" id="dailyCheck">-->
