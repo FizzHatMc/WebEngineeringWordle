@@ -17,8 +17,10 @@ const gameData = {
     players: [],
     word: "",
     word2: "",
-    gameOver: false,
-    submittedWords: map
+    gameState: -1,
+    submittedWords: [[],[]],
+    guessCounter: [0,0],
+
 }
 const io = new Server(server, {
     cors: {
@@ -41,9 +43,6 @@ if (!id || !PORT) {
     process.exit(1);
 }
 
-
-
-
 fetch("http://localhost:8080/getNewWord")
     .then(response => response.json())
     .then(data => {
@@ -63,94 +62,72 @@ if(lobbytype==="1v1"){
         })
 }
 
+if(lobbytype==="1v1") {
+    app.get('/game', (req, res) => {
+        res.sendFile(path.join(__dirname, '/game_1v1.html'));
+    });
+}else{
+    app.get('/game', (req, res) => {
+        res.sendFile(path.join(__dirname, '/game_.html'));
+    });
+}
 
-app.get('/game', (req, res) => {
-    res.sendFile(path.join(__dirname, '/game_.html'));
-});
 
-let guessCounter = -1
+function updateAll(boardX, r, guess, guessCounter) {
+    console.log("BoardID -> " + boardX + " Guess -> " + guess + " GuessCounter -> " + guessCounter)
+    io.emit('updateAll',  {
+        board: boardX,
+        daten: r,
+        word: guess,
+        tries: guessCounter
+
+    });
+}
+
+function guess(fetchURL,req,res){
+    const { gameId, guess, playerName } = req.body;
+    let playerID = gameData.players.indexOf(playerName) + 1
+
+    if(gameData.submittedWords[playerID-1].size>=6){
+        console.log("Done Player " + playerID)
+        gameData.gameState=0
+        res.send({
+            gameOver: gameData.gameState,
+            playerName: playerName
+        });
+        return
+    }
+
+    insertGuess(playerName,guess)
+    let correctWord
+    if(playerID === 1){
+        correctWord = gameData.word
+    }else {
+        correctWord = gameData.word2
+    }
+
+    fetch(fetchURL + guess + "/" + correctWord).then(response => response.json()).then(r  => {
+        if(r.toString().replaceAll(" ","") === "3,3,3,3,3"){
+            gameData.gameOver = 1
+            res.send({
+                gameState: gameData.gameState,
+                playerName: playerName
+            });
+        }
+
+        const boardX = gameData.players.indexOf(playerName) + 1
+
+        updateAll(boardX,r,guess,gameData.guessCounter[playerID-1])
+    });
+    gameData.guessCounter[playerID-1]++
+}
 
 app.post("/guess", (req, res) => {
-    const { gameId, guess, playerName } = req.body;
-
-    console.log(guessCounter)
-
-    if(gameData.submittedWords.size>=5){
-        console.log("Done")
-        gameData.gameOver=true
-        res.send({
-            gameOver: gameData.gameOver,
-            won: false
-        });
-        return
-    }
-
-    gameData.submittedWords.set(playerName+""+guessCounter,guess)
-
-
-    fetch('http://localhost:8080/try/' + guess + "/" + gameData.word).then(response => response.json()).then(r  => {
-        if(r.toString().replaceAll(" ","") === "3,3,3,3,3"){
-            console.log("Correct word ")
-            gameData.gameOver = true
-
-            res.send({
-                gameOver: gameData.gameOver,
-                won: true
-            });
-
-        }
-
-        io.emit('updateAll',  {
-            daten: r,
-            word: guess,
-            tries: guessCounter
-
-        });
-
-    });
-    guessCounter++
+    guess("http://localhost:8080/try/",req,res)
 });
 
-
 app.post("/guessDaily", (req, res) => {
-    const { gameId, guess, playerName } = req.body;
-
-    console.log("Daily ->" + guessCounter)
-
-    if(gameData.submittedWords.size>=5){
-        console.log("Done")
-        gameData.gameOver=true
-        res.send({
-            gameOver: gameData.gameOver,
-            won: false
-        });
-        return
-    }
-
-    gameData.submittedWords.set(playerName+""+guessCounter,guess)
-
-
-    fetch('http://localhost:8080/try/' + guess
-    ).then(response => response.json()).then(r  => {
-
-        if(r.toString().replaceAll(" ","") === "3,3,3,3,3"){
-            console.log("Correct word ")
-            gameData.gameOver = true
-
-            res.send({
-                gameOver: gameData.gameOver,
-                won: true
-            });
-        }
-
-        io.emit('updateAll',  {
-            daten: r,
-            word: guess,
-            tries: guessCounter
-
-        });
-    });
-    guessCounter++
+    guess("http://localhost:8080/try/",req,res)
 });
 
 let connectedClients = 0;
@@ -158,11 +135,22 @@ let connectedClients = 0;
 io.on("connection", (socket) => {
     connectedClients++;
     console.log("Client connected. Total:", connectedClients);
+    const originalUrl = socket.handshake.query.originalUrl;
+    const getName = (url) => new URLSearchParams(url.split('?')[1]).get("name");
+    console.log("Name -> " + getName(originalUrl))
+    gameData.players.push(getName(originalUrl))
+
+    if(connectedClients>1){
+        io.emit('playerJoined', {
+            name: getName(originalUrl)
+        })
+    }
 
     socket.on("disconnect", async () => {
         connectedClients--;
         console.log("Client disconnected. Total:", connectedClients);
 
+        gameData.players = gameData.players.filter(p => p !== getName(originalUrl));
         if (connectedClients <= 0) {
             console.log("No clients left. Sending shutdown signal...");
 
@@ -180,8 +168,15 @@ io.on("connection", (socket) => {
             });
         }
     });
+
 });
 
 server.listen(PORT, () => {
     console.log(`Sub-server for game ${id} is running on http://localhost:${PORT}/game`);
 })
+
+function insertGuess(playerName, guess) {
+    const index = gameData.players.indexOf(playerName);
+    if (index === -1) return console.log("Player not found");
+    gameData.submittedWords[index].push(guess);
+}
