@@ -24,7 +24,7 @@
                 <!-- hier Tiles -->
             </div>
             <input style="display: none" type="text" autocomplete="off" onchange="sendGuessHTTP()" name="guess" id="guess">
-            <input style="display: none" id="send-guess" type="button" value="Guess" onclick="sendGuessHTTP()">
+            <input style="display: none" id="send-guess" type="button" value="Raten" onclick="sendGuessHTTP()">
         </div>
         <div id="gegnerSpieldfeld">
             <h1 id="gegnername">Warten...</h1>
@@ -161,6 +161,10 @@
         document.getElementById("send-guess").style.display = "none";
         document.getElementById("gameover").style.display = "block";
     }
+
+    socket.on('playerJoined', (send) => {
+        gegnerJoined(send.name);
+    })
 
     function gegnerJoined(gegnername) {
         document.getElementById("guess").style.display = "block";
