@@ -22,11 +22,11 @@
             <div class="wordle-board" id="board1">
                 <!-- hier Tiles -->
             </div>
-            <input type="text" autocomplete="off" onchange="sendGuessHTTP()" name="guess" id="guess">
-            <input id="send-guess" type="button" value="Guess" onclick="sendGuessHTTP()">
+            <input style="display: none" type="text" autocomplete="off" onchange="sendGuessHTTP()" name="guess" id="guess">
+            <input style="display: none" id="send-guess" type="button" value="Guess" onclick="sendGuessHTTP()">
         </div>
         <div id="gegnerSpieldfeld">
-            <h1>Gegner: [name]</h1>
+            <h1 id="gegnername">Warten...</h1>
             <div class="wordle-board" style="display: grid" id="board2">
                 <!-- hier Tiles -->
             </div>
@@ -158,6 +158,12 @@
         document.getElementById("guess").style.display = "none";
         document.getElementById("send-guess").style.display = "none";
         document.getElementById("gameover").style.display = "block";
+    }
+
+    function gegnerJoined(gegnername) {
+        document.getElementById("guess").style.display = "block";
+        document.getElementById("send-guess").style.display = "block";
+        document.getElementById("gegnername").innerHTML = "Gegner: " + gegnername;
     }
 
 </script>

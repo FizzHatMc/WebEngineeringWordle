@@ -9,6 +9,10 @@ body {
     flex-direction: row;
 }
 
+#board1 {
+    margin-bottom: 15px;
+}
+
 #eigenesSpielfeld {
     display: flex;
     flex-direction: column;
