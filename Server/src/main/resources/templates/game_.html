@@ -13,6 +13,7 @@
     <a id="link2home" href="http://youtu.be/dQw4w9WgXcQ">
         <h1>WORDLE ONLINE</h1>
     </a>
+    <button id="copy-id" onclick="copyId()">Game-ID: [id]</button>
 </nav>
 <div class="game">
     <div class="wordle-board">
@@ -58,6 +59,8 @@
             letterArray[i][j] = '';
         }
     }
+
+    document.getElementById("copy-id").innerHTML = "Game-ID: " + gameId;
 
     socket.on('updateAll', (send) => {
         updateBoard(send.daten,send.word,send.tries);
@@ -139,6 +142,14 @@
         document.getElementById("guess").style.display = "none";
         document.getElementById("send-guess").style.display = "none";
         document.getElementById("gameover").style.display = "block";
+    }
+
+    function copyId(){
+        // Copy the text inside the text field
+        navigator.clipboard.writeText(gameId);
+
+        // Alert the copied text
+        alert("ID in Zwischenablage kopiert!");
     }
 
 </script>

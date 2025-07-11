@@ -45,6 +45,11 @@ body {
     color: #672A4E;
 }
 
+#navbar * {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
 #navbar a:hover {
     background-color: #D5FFF3;
     color: #820b8a;
@@ -134,12 +139,28 @@ footer {
     text-align: center;
 }
 
+button {
+    font-size: large;
+    margin: 10px;
+    background-color: #672A4E;
+    padding: 5px;
+    border-radius: 10px;
+    color: white;
+    border: none;
+    text-decoration: none;
+}
+
+button:hover {
+    background-color: #820b8a;
+    color: #D5FFF3;
+}
+
 #gameover {
     font-size: x-large;
     color: #672A4E;
 }
 
-h1 {
+div h1 {
     text-align: center;
     color: #672A4E;
 }
