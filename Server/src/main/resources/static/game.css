@@ -4,6 +4,17 @@ body {
     min-height: 100vh; /* lieber 100% ? */
 }
 
+#nebeneinander {
+    display: flex;
+    flex-direction: row;
+}
+
+#eigenesSpielfeld {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .game {
     display: flex;
     flex-direction: column;
@@ -39,6 +50,8 @@ body {
     display: grid;
     grid-template-columns: repeat(5, 50px);
     grid-gap: 8px;
+    margin-right: 20px;
+    margin-left: 20px;
 }
 
 .tile {
@@ -115,4 +128,14 @@ footer {
     background-color: #C7EDE4;
     color: #af9ab2;
     text-align: center;
+}
+
+#gameover {
+    font-size: x-large;
+    color: #672A4E;
+}
+
+h1 {
+    text-align: center;
+    color: #672A4E;
 }

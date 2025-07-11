@@ -15,15 +15,28 @@
     </a>
 </nav>
 <div class="game">
-    <div class="wordle-board">
-        <!-- hier Tiles -->
+
+    <div id="nebeneinander">
+        <div id="eigenesSpielfeld">
+            <h1>Dein Spielfeld</h1>
+            <div class="wordle-board" id="board1">
+                <!-- hier Tiles -->
+            </div>
+            <input type="text" autocomplete="off" onchange="sendGuessHTTP()" name="guess" id="guess">
+            <input id="send-guess" type="button" value="Guess" onclick="sendGuessHTTP()">
+        </div>
+        <div id="gegnerSpieldfeld">
+            <h1>Gegner: [name]</h1>
+            <div class="wordle-board" style="display: grid" id="board2">
+                <!-- hier Tiles -->
+            </div>
+        </div>
+        <!--        <div class="keyboard">-->
+        <!--            &lt;!&ndash; Keyboard buttons hinzufügen? &ndash;&gt;-->
+        <!--        </div>-->
     </div>
-    <div class="keyboard">
-        <!-- Keyboard buttons hinzufügen? -->
-    </div>
-<!--    <div id="arrayDisplay"></div> Debugzahlen-->
-    <input type="text" autocomplete="off" onchange="sendGuessHTTP()" name="guess" id="guess">
-    <input id="send-guess" type="button" value="Guess" onclick="sendGuessHTTP()">
+
+    <!--    <div id="arrayDisplay"></div> Debugzahlen-->
     <p id="gameover" style="display: none">Game Over!</p>
 <!--    <input type="checkbox" id="dailyCheck">-->
 </div>
@@ -60,20 +73,26 @@
     }
 
     socket.on('updateAll', (send) => {
-        updateBoard(send.daten,send.word,send.tries);
+        updateBoard(board1,send.daten,send.word,send.tries);
     })
 
-    const board = document.querySelector('.wordle-board');
-    // erstellt die Tiles
-    for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
-            const tile = document.createElement('div');
-            tile.classList.add('tile');
-            board.appendChild(tile);
+    const board1 = document.getElementById("board1");
+    const board2 = document.getElementById("board2");
+    tilesErstellen(board1);
+    tilesErstellen(board2);
+
+
+    function tilesErstellen(board){
+        for (let row = 0; row < rows; row++) {
+            for (let col = 0; col < cols; col++) {
+                const tile = document.createElement('div');
+                tile.classList.add('tile');
+                board.appendChild(tile);
+            }
         }
     }
 
-    function updateBoard(data,word,tries){
+    function updateBoard(board,data,word,tries){
 
         for (let i = 0; i < colorArray[tries].length; i++) {
             colorArray[tries][i] = data[i];
