@@ -61,6 +61,9 @@
     }
 
     document.getElementById("copy-id").innerHTML = "Game-ID: " + gameId;
+    if(playerName === "solo"){
+        document.getElementById("copy-id").style.display = "none";
+    }
 
     socket.on('updateAll', (send) => {
         updateBoard(send.daten,send.word,send.tries);
