@@ -229,7 +229,7 @@ public class WebController {
             rest = restIndexList.stream().mapToInt(i -> i).toArray();
             for (int i = 0; i < restCorrect.length(); i++) {
                 char curr = word.toLowerCase().charAt(i);
-                if (instancesOfChar(restWort.substring(0, i), curr) >= instancesOfChar(restCorrect, curr)) {
+                if (instancesOfChar(restWort.substring(0, i+1), curr) > instancesOfChar(restCorrect, curr)) {// hier ist die Änderung
                     colors[rest[i]] = 1;
                 } else {
                     colors[rest[i]] = 2;
