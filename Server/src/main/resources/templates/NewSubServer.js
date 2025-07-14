@@ -136,7 +136,15 @@ io.on("connection", (socket) => {
     connectedClients++;
     console.log("Client connected. Total:", connectedClients);
     const originalUrl = socket.handshake.query.originalUrl;
-    const getName = (url) => new URLSearchParams(url.split('?')[1]).get("name");
+    const getName = (url) => {
+        if (!url) return null;
+        try {
+            return new URLSearchParams(url.split('?')[1]).get("name");
+        } catch (e) {
+            console.error("Error parsing URL:", e);
+            return null;
+        }
+    };
     console.log("Name -> " + getName(originalUrl))
     gameData.players.push(getName(originalUrl))
 

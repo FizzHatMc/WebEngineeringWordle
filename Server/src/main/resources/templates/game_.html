@@ -43,12 +43,17 @@
     const cols = 5;
     const colorArray = [];
     const letterArray = [];
-    const socket = io();
+    const port = window.location.port;
+
+    const socket = io("http://localhost:"+port, {
+        query: {
+            originalUrl: window.location.pathname + window.location.search
+        }
+    });
     let tries = 0;
     let word = document.getElementById("guess").value;
 
     const gameId = new URLSearchParams(window.location.search).get('id');
-    const port = window.location.port;
     const host = window.location.hostname;
     const playerName = new URLSearchParams(window.location.search).get('name'); // Get player name
     const slider = new URLSearchParams(window.location.search).get('daily');
