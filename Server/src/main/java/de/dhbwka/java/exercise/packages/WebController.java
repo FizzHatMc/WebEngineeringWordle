@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 @Controller
@@ -64,6 +63,8 @@ public class WebController {
         String lobbytype = "1v1";
         if (modi.equals("team")) {
             lobbytype = "team";
+        } else if (modi.equals("solo")) {
+            lobbytype="solo";
         }
         int subServerPort = 4001 + subservers.size();
         // Start the sub-server as a separate Node.js process
@@ -204,13 +205,11 @@ public class WebController {
     }
 
     private ResponseEntity<int[]> checkWord(String word, String correctWord) {
-        // wenn ein wort einen buchstaben nur x mal enthält , soll der buschtabe auch nur x mal so eingefärbt werden,
-        // als wäre er im wort enthalten
         if (word.length() == 5) {
             int[] colors = new int[5];
             int[] rest;
-            String restWort = "";
-            String restCorrect = "";
+            StringBuilder restWort = new StringBuilder();
+            StringBuilder restCorrect = new StringBuilder();
             ArrayList<Integer> restIndexList = new ArrayList<>();
             for (int i = 0; i < 5; i++) {
                 String currentLetter = String.valueOf(word.toLowerCase().charAt(i));
@@ -219,8 +218,8 @@ public class WebController {
                         colors[i] = 3;
                     } else {
                         restIndexList.add(i);
-                        restWort += currentLetter;
-                        restCorrect += String.valueOf(correctWord.toLowerCase().charAt(i));
+                        restWort.append(currentLetter);
+                        restCorrect.append(correctWord.toLowerCase().charAt(i));
                     }
                 } else {
                     colors[i] = 1;
@@ -229,7 +228,7 @@ public class WebController {
             rest = restIndexList.stream().mapToInt(i -> i).toArray();
             for (int i = 0; i < restCorrect.length(); i++) {
                 char curr = word.toLowerCase().charAt(i);
-                if (instancesOfChar(restWort.substring(0, i+1), curr) > instancesOfChar(restCorrect, curr)) {// hier ist die Änderung
+                if (instancesOfChar(restWort.substring(0, i+1), curr) > instancesOfChar(restCorrect.toString(), curr)) {
                     colors[rest[i]] = 1;
                 } else {
                     colors[rest[i]] = 2;
@@ -240,7 +239,6 @@ public class WebController {
             return ResponseEntity.ok(new int[]{0, 0, 0, 0, 0});
         }
     }
-
 
     private int instancesOfChar(String wort, char character) {
         int x = 0;
