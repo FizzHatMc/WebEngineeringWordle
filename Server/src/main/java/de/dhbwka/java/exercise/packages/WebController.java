@@ -64,6 +64,8 @@ public class WebController {
         String lobbytype = "1v1";
         if (modi.equals("team")) {
             lobbytype = "team";
+        }else if(modi.equals("solo")) {
+            lobbytype = "solo";
         }
         int subServerPort = 4001 + subservers.size();
         // Start the sub-server as a separate Node.js process

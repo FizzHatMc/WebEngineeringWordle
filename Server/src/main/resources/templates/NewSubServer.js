@@ -11,6 +11,7 @@ const server = http.createServer(app);
 const id = process.argv[2] || 1;
 const PORT = parseInt(process.argv[3], 10) || 4000;
 const lobbytype = process.argv[4];
+console.log("Lobby -> " + lobbytype)
 
 const map = new Map();
 const gameData = {
@@ -66,14 +67,14 @@ if(lobbytype==="1v1") {
     app.get('/game', (req, res) => {
         res.sendFile(path.join(__dirname, '/game_1v1.html'));
     });
-}else{
+}else if(lobbytype==="team" || lobbytype==="solo"){
     app.get('/game', (req, res) => {
         res.sendFile(path.join(__dirname, '/game_.html'));
     });
 }
 
 
-function updateAll(boardX, r, guess, guessCounter) {
+function updateAll(boardX, r, guess, guessCounter,playerID) {
     console.log("BoardID -> " + boardX + " Guess -> " + guess + " GuessCounter -> " + guessCounter)
     io.emit('updateAll',  {
         board: boardX,
@@ -82,21 +83,15 @@ function updateAll(boardX, r, guess, guessCounter) {
         tries: guessCounter
 
     });
+    gameData.guessCounter[playerID-1]++
+
 }
 
 function guess(fetchURL,req,res){
     const { gameId, guess, playerName } = req.body;
     let playerID = gameData.players.indexOf(playerName) + 1
 
-    if(gameData.submittedWords[playerID-1].size>=6){
-        console.log("Done Player " + playerID)
-        gameData.gameState=0
-        res.send({
-            gameOver: gameData.gameState,
-            playerName: playerName
-        });
-        return
-    }
+    gameData.submittedWords[playerID-1][gameData.guessCounter[playerID-1]] = guess;
 
     insertGuess(playerName,guess)
     let correctWord
@@ -115,11 +110,22 @@ function guess(fetchURL,req,res){
             });
         }
 
+
+
         const boardX = gameData.players.indexOf(playerName) + 1
 
-        updateAll(boardX,r,guess,gameData.guessCounter[playerID-1])
+        updateAll(boardX,r,guess,gameData.guessCounter[playerID-1],playerID)
+
+        if(gameData.guessCounter[playerID-1]>=6){
+            console.log("Done Player " + playerID)
+            gameData.gameState=0
+            res.send({
+                gameOver: gameData.gameState,
+                playerName: playerName
+            });
+
+        }
     });
-    gameData.guessCounter[playerID-1]++
 }
 
 app.post("/guess", (req, res) => {
