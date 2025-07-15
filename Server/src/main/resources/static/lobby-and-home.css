@@ -8,6 +8,13 @@ body {
     background-color: #D5FFF3;
 }
 
+.container div {
+    text-align: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+a {
 .container a {
     text-decoration: none;
 }
@@ -19,6 +26,14 @@ body {
 
 .impressum a {
     color: #672A4E;
+}
+
+.hidden {
+    display: none;
+}
+
+.visible {
+    display: flex;
 }
 
 .container {
@@ -42,7 +57,7 @@ footer {
     text-align: center;
 }
 
-.container h1:hover {
+a h1:hover {
     background-color: #672A4E;
     color: white;
 }
@@ -100,7 +115,62 @@ input {
     text-decoration: none;
 }
 
+.toggle-button {
+    margin: 10px;
+    padding: 5px;
+    border-radius: 10px;
+    font-size: x-large;
+    /*border: none;*/
+    border: 3px solid transparent;
+    text-decoration: none;
+}
+
+.toggle-button:hover {
+    border: 3px solid lightgray;
+}
+
+.is-off {
+    background-color: #af9ab2;
+    color: gray;
+}
+
+.is-active {
+    color: #D5FFF3;
+    background-color: #672A4E;
+}
+
 .menu-button:hover {
     background-color: #820b8a;
     color: #D5FFF3;
+}
+
+input[type="radio"]{
+    display: none;
+}
+
+label {
+    margin: 10px;
+    /*background-color: #C7EDE4;*/
+    background-color: #af9ab2;
+    padding: 5px;
+    border-radius: 10px;
+    font-size: x-large;
+    color: #672A4E;
+    border: 3px solid transparent;
+    text-decoration: none;
+}
+
+#moduswahl {
+    margin: 10px;
+}
+
+input[type="radio"]:checked + label{
+    /*background-color: #C7EDE4;*/
+    background-color: #af9ab2;
+    border: 3px solid #672A4E;
+}
+
+label:hover {
+    border: 3px solid #820b8a;
+    /*color: #D5FFF3;*/
 }

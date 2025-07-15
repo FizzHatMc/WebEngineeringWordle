@@ -2,6 +2,7 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/static/lobby-and-home.css">
     <title>Home</title>
 </head>
@@ -10,7 +11,8 @@
 
 <h1>WORDLE<br><em>online</em></h1>
 
-<a class="menu-button" href="/game">Spielen</a>
+<!--<a class="menu-button" href="/game">Spielen</a>-->
+<button class="menu-button" onclick="createGame()">Spielen</button>
 <a class="menu-button" href="/lobby">Lobby</a>
 <!--<a class="menu-button" href="/login">Login</a>-->
 
@@ -22,5 +24,33 @@
     </p>
 </footer>
 
+<script>
+    function navigateToGame(gameId, port, playerName) {
+        const targetHost = window.location.hostname; // Keeps same domain (e.g., localhost or example.com)
+        const targetPath = "/game?id="+gameId+"&name="+encodeURIComponent(playerName)+"&daily=daily";  // Change to the desired path on that server if needed
+
+        // Navigate to the new port
+        window.location.href = `http://${targetHost}:${port}${targetPath}`;
+    }
+
+    function createGame(){
+        console.log("Button pressed")
+        const playerName = "solo";
+        const modus = "solo";
+        fetch('/create-game/'+modus)
+            .then(response => response.json())
+            .then(data => {
+                if (data.gameId && data.port) {
+                    navigateToGame(data.gameId, data.port, playerName);
+                } else {
+                    showError('Failed to create game. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error creating game:', error);
+                showError('An error occurred. Please check your network connection.');
+            });
+    }
+</script>
 </body>
 </html>

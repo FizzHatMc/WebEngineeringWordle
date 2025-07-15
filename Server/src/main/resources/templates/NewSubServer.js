@@ -4,12 +4,24 @@ const { Server } = require('socket.io');
 const http = require('http');
 const path = require('path'); // Add this line
 const fs = require('fs');
+const {response} = require("express");
 
 const app = express();
 const server = http.createServer(app);
 const id = process.argv[2] || 1;
 const PORT = parseInt(process.argv[3], 10) || 4000;
-const correctWord = process.argv[4];
+const lobbytype = process.argv[4];
+
+
+const gameData = {
+    players: [],
+    word: "",
+    word2: "",
+    gameState: -1,
+    submittedWords: [[],[]],
+    guessCounter: [0,0],
+    globalCounter: 0
+}
 const io = new Server(server, {
     cors: {
         origin: "*",
@@ -17,125 +29,122 @@ const io = new Server(server, {
     }
 });
 const staticPath = path.join(__dirname, '..', 'static');
-console.log('Static files path:', staticPath);
-console.log('game.css exists:', fs.existsSync(path.join(staticPath, 'game.css')));
-
 app.use('/static', express.static(staticPath, {
-    fallthrough: false // Important: don't fall through to other routes
+    fallthrough: false
 }));
-
-// Error handler for missing static files
 app.use('/static', (req, res) => {
     console.error(`Static file not found: ${req.path}`);
     res.status(404).send('Not found');
 });
-
 app.use(express.json());
-
-if (!id || !PORT || !correctWord) {
-    console.error('Sub-server requires id, PORT and CorrectWord arguments.');
+if (!id || !PORT) {
+    console.error('Sub-server requires id, PORT arguments.');
 
     process.exit(1);
 }
 
-const map = new Map();
+fetch("http://localhost:8080/getNewWord")
+    .then(response => response.json())
+    .then(data => {
+        console.log("NewWord -> " + data.word)
+        gameData.word = data.word
 
-const gameData = {
-    players: [],
-    word: correctWord,
-    gameOver: false,
-    submittedWords: map
+
+    })
+
+if(lobbytype==="1v1"){
+    fetch("http://localhost:8080/getNewWord")
+        .then(response => response.json())
+        .then(data => {
+            console.log("NewWord2 -> " + data.word)
+            gameData.word2 = data.word
+
+        })
+}
+
+if(lobbytype==="1v1") {
+    app.get('/game', (req, res) => {
+        res.sendFile(path.join(__dirname, '/game_1v1.html'));
+    });
+}else if(lobbytype==="team" || lobbytype==="solo"){
+    app.get('/game', (req, res) => {
+        res.sendFile(path.join(__dirname, '/game_.html'));
+    });
 }
 
 
-app.get('/game', (req, res) => {
-    console.error(gameData.word + " - " + correctWord)
-    res.sendFile(path.join(__dirname, '/game_.html'));
-});
+function updateAll(r, guess, guessCounter,playerID) {
+    console.log("BoardID -> " + playerID + " Guess -> " + guess + " GuessCounter -> " + guessCounter + " r -> " + r)
+    io.emit('updateAll',  {
+        //board: boardX,
+        playerID: playerID,
+        daten: r,
+        word: guess,
+        tries: guessCounter
 
-let guessCounter = -1
+    });
+
+    if(lobbytype==="team" || lobbytype==="solo"){
+        gameData.globalCounter++
+    }else if(lobbytype==="1v1"){
+        gameData.guessCounter[playerID-1]++
+    }
+
+}
+
+function guess(fetchURL,req,res){
+    const { gameId, guess, playerName } = req.body;
+    let playerID = gameData.players.indexOf(playerName) + 1
+
+    gameData.submittedWords[playerID-1][gameData.guessCounter[playerID-1]] = guess;
+
+    insertGuess(playerName,guess)
+    let correctWord
+
+    if(lobbytype==="1v1"){
+        if(playerID === 1){
+            correctWord = gameData.word
+        }else {
+            correctWord = gameData.word2
+        }
+    }else{
+        correctWord = gameData.word
+    }
+
+    console.log("Fetch : (url, guess, correctWord)" + fetchURL + " " +  guess + " " + correctWord)
+    fetch(fetchURL + guess + "/" + correctWord).then(response => response.json()).then(r  => {
+        if(r.toString().replaceAll(" ","") === "3,3,3,3,3"){
+            gameData.gameOver = 1
+            res.send({
+                gameState: gameData.gameState,
+                playerName: playerName
+            });
+        }
+
+        if(lobbytype==="team" || lobbytype==="solo"){
+            updateAll(r,guess,gameData.globalCounter,playerID)
+        }else if(lobbytype==="1v1" ){
+            updateAll(r,guess,gameData.guessCounter[playerID-1],playerID)
+        }
+
+        if(gameData.guessCounter[playerID-1]>=6 || gameData.globalCounter >= 6){
+            console.log("Done Player " + playerID)
+            gameData.gameState=0
+            res.send({
+                gameOver: gameData.gameState,
+                playerName: playerName
+            });
+
+        }
+    });
+}
 
 app.post("/guess", (req, res) => {
-    const { gameId, guess, playerName } = req.body;
-
-    console.log(guessCounter)
-
-    if(gameData.submittedWords.size>=5){
-        console.log("Done")
-        gameData.gameOver=true
-        res.send({
-            gameOver: gameData.gameOver,
-            won: false
-        });
-        return
-    }
-
-    gameData.submittedWords.set(playerName+""+guessCounter,guess)
-
-
-    fetch('http://localhost:8080/try/' + guess + "/" + gameData.word).then(response => response.json()).then(r  => {
-        if(r.toString().replaceAll(" ","") == "3,3,3,3,3"){
-            console.log("Correct word ")
-            gameData.gameOver = true
-
-            res.send({
-                gameOver: gameData.gameOver,
-                won: true
-            });
-
-        }
-
-        io.emit('updateAll',  {
-            daten: r,
-            word: guess,
-            tries: guessCounter
-
-        });
-
-    });
-    guessCounter++
+    guess("http://localhost:8080/try/",req,res)
 });
 
-
 app.post("/guessDaily", (req, res) => {
-    const { gameId, guess, playerName } = req.body;
-
-    console.log("Daily ->" + guessCounter)
-
-    if(gameData.submittedWords.size>=5){
-        console.log("Done")
-        gameData.gameOver=true
-        res.send({
-            gameOver: gameData.gameOver,
-            won: false
-        });
-        return
-    }
-
-    gameData.submittedWords.set(playerName+""+guessCounter,guess)
-
-
-    fetch('http://localhost:8080/try/' + guess
-    ).then(response => response.json()).then(r  => {
-
-        if(r.toString().replaceAll(" ","") == "3,3,3,3,3"){
-            console.log("Correct word ")
-            gameData.gameOver = true
-
-            res.send({
-                gameOver: gameData.gameOver,
-                won: true
-            });
-        }
-
-        io.emit('updateAll',  {
-            daten: r,
-            word: guess,
-            tries: guessCounter
-
-        });
-    });
-    guessCounter++
+    guess("http://localhost:8080/try/",req,res)
 });
 
 let connectedClients = 0;
@@ -143,11 +152,32 @@ let connectedClients = 0;
 io.on("connection", (socket) => {
     connectedClients++;
     console.log("Client connected. Total:", connectedClients);
+    const originalUrl = socket.handshake.query.originalUrl;
+    const getName = (url) => {
+        if (!url) return null;
+        try {
+            return new URLSearchParams(url.split('?')[1]).get("name");
+        } catch (e) {
+            console.error("Error parsing URL:", e);
+            return null;
+        }
+    };
+    console.log("Name -> " + getName(originalUrl))
+    gameData.players.push(getName(originalUrl))
+
+
+    if(connectedClients>1){
+        io.emit('playerJoined', {
+            namen: gameData.players
+
+        })
+    }
 
     socket.on("disconnect", async () => {
         connectedClients--;
         console.log("Client disconnected. Total:", connectedClients);
 
+        gameData.players = gameData.players.filter(p => p !== getName(originalUrl));
         if (connectedClients <= 0) {
             console.log("No clients left. Sending shutdown signal...");
 
@@ -165,8 +195,15 @@ io.on("connection", (socket) => {
             });
         }
     });
+
 });
 
 server.listen(PORT, () => {
     console.log(`Sub-server for game ${id} is running on http://localhost:${PORT}/game`);
 })
+
+function insertGuess(playerName, guess) {
+    const index = gameData.players.indexOf(playerName);
+    if (index === -1) return console.log("Player not found");
+    gameData.submittedWords[index].push(guess);
+}

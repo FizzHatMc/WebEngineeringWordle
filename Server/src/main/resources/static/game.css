@@ -1,7 +1,22 @@
 body {
     font-family: sans-serif;
     margin: 0;
-    min-height: 100vw; /* lieber 100% ? */
+    min-height: 100vh; /* lieber 100% ? */
+}
+
+#nebeneinander {
+    display: flex;
+    flex-direction: row;
+}
+
+#board1 {
+    margin-bottom: 15px;
+}
+
+#eigenesSpielfeld {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .game {
@@ -9,21 +24,30 @@ body {
     flex-direction: column;
     /*justify-content: center;*/
     margin: 10px;
+    margin-top: 80px;
     align-items: center;
 }
 
 #navbar {
+    position: fixed;
+    left: 0;
+    top: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 10%;
+    /*height: 10%;*/
     background-color: #C7EDE4;
 }
 
 #navbar a {
     text-decoration: none;
     color: #672A4E;
+}
+
+#navbar * {
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 #navbar a:hover {
@@ -35,6 +59,8 @@ body {
     display: grid;
     grid-template-columns: repeat(5, 50px);
     grid-gap: 8px;
+    margin-right: 20px;
+    margin-left: 20px;
 }
 
 .tile {
@@ -115,4 +141,30 @@ footer {
     background-color: #C7EDE4;
     color: #af9ab2;
     text-align: center;
+}
+
+button {
+    font-size: large;
+    margin: 10px;
+    background-color: #672A4E;
+    padding: 5px;
+    border-radius: 10px;
+    color: white;
+    border: none;
+    text-decoration: none;
+}
+
+button:hover {
+    background-color: #820b8a;
+    color: #D5FFF3;
+}
+
+#gameover {
+    font-size: x-large;
+    color: #672A4E;
+}
+
+div h1 {
+    text-align: center;
+    color: #672A4E;
 }

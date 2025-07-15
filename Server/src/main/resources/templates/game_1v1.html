@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html lang="de">
 
 <head>
     <meta charset="UTF-8">
@@ -12,20 +13,31 @@
     <a id="link2home" href="http://youtu.be/dQw4w9WgXcQ">
         <h1>WORDLE ONLINE</h1>
     </a>
-
-
     <button id="copy-id" onclick="copyId()">Game-ID: [id]</button>
 </nav>
 <div class="game">
-    <div class="wordle-board">
-        <!-- hier Tiles -->
+
+    <div id="nebeneinander">
+        <div id="eigenesSpielfeld">
+            <h1>Dein Spielfeld</h1>
+            <div class="wordle-board" id="board1">
+                <!-- hier Tiles -->
+            </div>
+            <input style="display: none" type="text" autocomplete="off" onchange="sendGuessHTTP()" name="guess" id="guess">
+            <input style="display: none" id="send-guess" type="button" value="Raten" onclick="sendGuessHTTP()">
+        </div>
+        <div id="gegnerSpieldfeld">
+            <h1 id="gegnername">Warten...</h1>
+            <div class="wordle-board" style="display: grid" id="board2">
+                <!-- hier Tiles -->
+            </div>
+        </div>
+        <!--        <div class="keyboard">-->
+        <!--            &lt;!&ndash; Keyboard buttons hinzufügen? &ndash;&gt;-->
+        <!--        </div>-->
     </div>
-    <div class="keyboard">
-        <!-- Keyboard buttons hinzufügen? -->
-    </div>
+
     <!--    <div id="arrayDisplay"></div> Debugzahlen-->
-    <input type="text" autocomplete="off" onchange="sendGuessHTTP()" name="guess" id="guess">
-    <input id="send-guess" type="button" value="Raten" onclick="sendGuessHTTP()">
     <p id="error" style="display: none">Es gab einen Fehler...</p> <!-- Gamestate -1 -->
     <p id="gameover" style="display: none">Keine Versuche mehr!</p> <!-- Gamestate 0 -->
     <p id="enemy" style="display: none">Game Over!</p> <!-- Gamestate 1 -->
@@ -33,24 +45,11 @@
     <!--    <input type="checkbox" id="dailyCheck">-->
 </div>
 
-<br/><br/>
-<br/><br/>
-<br/><br/>
-<br/><br/>
-
-<div>
-    <input type="checkbox" id="darkMode" onclick="darkmode()">
-</div>
-
 <footer>
-    <p>
-        <a href="/">Home</a> |
-        <a href="/impressum">Impressum</a> |
-        <a href="mailto://info@dhbw-karlsruhe.de">info@dhbw-karlsruhe.de</a>
-    </p>
+    <p>Impressum type shi</p>
 </footer>
 
 <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-<script src="../static/solo-team.js"></script>
+<script src="../static/1v1.js"></script>
 </body>
 </html>
