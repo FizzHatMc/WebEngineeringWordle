@@ -27,61 +27,6 @@
   <p>Impressum type shi</p>
 </footer>
 
-<script>
-  const gameIdInput = document.getElementById('game-id-input');
-  const nameInput = document.getElementById('name-input');
-  const errorMessageDisplay = document.getElementById('error-message');
-
-  function showError(message) {
-    errorMessageDisplay.textContent = message;
-  }
-
-  function navigateToGame(gameId, port, playerName) {
-    const targetHost = window.location.hostname; // Keeps same domain (e.g., localhost or example.com)
-    const targetPath = "/game?id="+gameId+"&name="+encodeURIComponent(playerName);  // Change to the desired path on that server if needed
-
-    // Navigate to the new port
-    window.location.href = `http://${targetHost}:${port}${targetPath}`;
-  }
-
-  function joinGame(){
-    const gameId = gameIdInput.value.trim();
-
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    let playerName = urlParams.get('name');
-
-    if(!playerName){
-      playerName = nameInput.value.trim();
-    }
-
-    if (!playerName) {
-      showError('No name ¯\\_(ツ)_/¯');
-      document.getElementById("name-input").style.display = "block";
-      return;
-    }
-    if (!gameId) {
-      showError('Please enter a Game ID.');
-      return;
-    }
-    fetch(`/join-game?id=${gameId}`)
-
-            .then(response => response.json())
-            .then(data => {
-              console.log(data)
-
-              if (data.status === 'joined') {
-                navigateToGame(gameId, data.message, playerName);
-              } else {
-                showError(data.message);
-              }
-            })
-            .catch(error => {
-              console.error('Error joining game:', error);
-              showError('An error occurred. Please check your network connection.');
-            });
-  }
-
-</script>
+<script src="../static/lobby.js"></script>
 </body>
 </html>
