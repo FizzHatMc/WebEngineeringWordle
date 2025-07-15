@@ -127,4 +127,6 @@ Um Multiplayer Wordle lokal einzurichten und zu starten:
 
 ---
 <a name="Team"></a>
-Entwickelt von Jonas, Jonatha, Kilian und Marcel
+## Das Team
+
+Entwickelt von Jonas (Kontrol Server), Jonathan (Front End), Kilian (Projektmanagement) und Marcel (Lobby Server)
