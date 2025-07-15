@@ -1,16 +1,58 @@
-const express = require('express');
-const { v4: uuidv4 } = require('uuid');
-const { Server } = require('socket.io');
-const http = require('http');
-const path = require('path'); // Add this line
-const fs = require('fs');
-const {response} = require("express");
+import express from 'express';
+import { v4 as uuidv4 } from 'uuid';
+import { Server } from 'socket.io';
+import http from 'http';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.resolve();
 const app = express();
 const server = http.createServer(app);
 const id = process.argv[2] || 1;
 const PORT = parseInt(process.argv[3], 10) || 4000;
 const lobbytype = process.argv[4];
+
+const RESOURCES_ROOT = process.env.RESOURCES_PATH || '/tmp/wordle-resources';
+const TEMPLATES_PATH = path.join(RESOURCES_ROOT, 'templates');
+const STATIC_PATH = path.join(RESOURCES_ROOT, 'static');
+
+
+
+// Verify paths exist
+console.log(`Templates path: ${TEMPLATES_PATH}`);
+console.log(`Static files path: ${STATIC_PATH}`);
+
+// Configure static files
+app.use('/static', express.static(STATIC_PATH, {
+    fallthrough: false,
+    setHeaders: (res) => {
+        res.set('Cache-Control', 'public, max-age=3600');
+    }
+}));
+
+// Error handler for static files
+app.use('/static', (req, res) => {
+    console.error(`Static file not found: ${req.path}`);
+    res.status(404).send('Not found');
+});
+
+// Template routes
+app.get('/game', (req, res) => {
+    const fileName = lobbytype === "1v1" ? 'game_1v1.html' : 'game_.html';
+    const filePath = path.join(TEMPLATES_PATH, fileName);
+
+    console.log(`Serving template: ${filePath}`);
+    res.sendFile(filePath, (err) => {
+        if (err) {
+            console.error('Failed to send template:', err);
+            if (!res.headersSent) {
+                res.status(500).send('Error loading game template');
+            }
+        }
+    });
+});
 
 const gameData = {
     players: [],
@@ -27,14 +69,8 @@ const io = new Server(server, {
         methods: ["GET", "POST"]
     }
 });
-const staticPath = path.join(__dirname, '..', 'static');
-app.use('/static', express.static(staticPath, {
-    fallthrough: false
-}));
-app.use('/static', (req, res) => {
-    console.error(`Static file not found: ${req.path}`);
-    res.status(404).send('Not found');
-});
+
+
 app.use(express.json());
 if (!id || !PORT) {
     console.error('Sub-server requires id, PORT arguments.');
@@ -61,15 +97,7 @@ if(lobbytype==="1v1"){
         })
 }
 
-if(lobbytype==="1v1") {
-    app.get('/game', (req, res) => {
-        res.sendFile(path.join(__dirname, '/game_1v1.html'));
-    });
-}else if(lobbytype==="team" || lobbytype==="solo"){
-    app.get('/game', (req, res) => {
-        res.sendFile(path.join(__dirname, '/game_.html'));
-    });
-}
+
 
 
 function updateAll(r, guess, guessCounter,playerID) {
@@ -94,7 +122,7 @@ function updateAll(r, guess, guessCounter,playerID) {
 function guess(fetchURL,req,res){
     const { gameId, guess, playerName } = req.body;
     let playerID = gameData.players.indexOf(playerName) + 1
-
+    console.log("Guess > " + guess)
     gameData.submittedWords[playerID-1][gameData.guessCounter[playerID-1]] = guess;
 
     insertGuess(playerName,guess)

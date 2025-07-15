@@ -65,6 +65,7 @@ function navigateToGame(gameId, port, playerName) {
     const targetPath = "/game?id="+gameId+"&name="+encodeURIComponent(playerName)+dailyAnhang;  // Change to the desired path on that server if needed
 
     // Navigate to the new port
+    console.log("Href -> " + `http://${targetHost}:${port}${targetPath}`)
     window.location.href = `http://${targetHost}:${port}${targetPath}`;
 }
 

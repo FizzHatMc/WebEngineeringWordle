@@ -1,36 +1,38 @@
 package de.dhbwka.java.exercise.packages;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class WordHandler {
-    public static String getRandomWord(){
-        ArrayList<String> zeilen = new ArrayList<>();
-        int anzahlZeilen=0;
-        try(BufferedReader reader = new BufferedReader(new FileReader(new File("words2.txt")))){
-            while(reader.ready()){
-                zeilen.add(reader.readLine());
-                anzahlZeilen++;
+    public static String getRandomWord() {
+        try {
+            // Load file from classpath
+            InputStream inputStream = Start.class.getClassLoader().getResourceAsStream("words2.txt");
+            if (inputStream == null) {
+                throw new FileNotFoundException("File not found in classpath: words2.txt");
             }
-        }catch (IOException e){
-            System.err.println("Krise");
-        }
-        if(anzahlZeilen==0){
-            System.out.println("Null-Datei");
+
+            List<String> lines = new ArrayList<>();
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    lines.add(line);
+                }
+            }
+
+            if (lines.isEmpty()) {
+                System.out.println("Empty file");
+                return "error";
+            }
+
+            String newWord = lines.get((int) (Math.random() * lines.size()));
+            System.out.println("New Word: " + newWord);
+            return newWord;
+        } catch (IOException e) {
+            System.err.println("Error reading file: " + e.getMessage());
             return "error";
         }
-        String[] inhalt = new String[anzahlZeilen];
-        int zähler=0;
-        for (String zeile : zeilen){
-            inhalt[zähler]= zeile;
-            zähler++;
-        }
-        String newWord = inhalt[(int) (Math.random()*inhalt.length)];
-        System.out.println("New Word : "+newWord);
-        return newWord;
     }
 
 }

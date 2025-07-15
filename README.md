@@ -51,8 +51,8 @@ Dieses Projekt ist in mehreren Schlüsselkomponenten organisiert:
 ## 📸 Screenshots
 
 
-<img src="Server/src/main/resources/images/HomePage.png" width="840" alt="Lobby">
-<img src="Server/src/main/resources/images/Lobby.png" width="840" alt="Lobby">
+<img src="src/main/resources/images/HomePage.png" width="840" alt="Lobby">
+<img src="src/main/resources/images/Lobby.png" width="840" alt="Lobby">
 
 
 ---
@@ -102,7 +102,7 @@ Die Homepage (home.html) ist die startseite, auf der das Impressum (impressum.ht
 Wenn der Spieler auf der Lobby website ein Spiel startet, wird er darauf hin auch zu einem Game (game_.html / game_1v1.html) weitergeleitet.
 Es kann von jeder Website (bis auf Homepage) auf die "Wordle Online" schrift gedrückt werden um auf die Homepage zurückzukommen.
 
-![UbersichtDiagramm.drawio.png](Server/src/main/resources/images/UbersichtDiagramm.drawio.png)
+![UbersichtDiagramm.drawio.png](src/main/resources/images/UbersichtDiagramm.drawio.png)
 
 ### Spielmodis
 
@@ -111,7 +111,7 @@ Es existieren technisch 3 Modis. </br>
 - **1v1** - Zwei Spieler spielen gegeneinander. Der erste der das Tägliche oder sein eigenes Wort errät, gewinnt.
 - **Team** - Zwei Spieler erraten das Tägliche oder Lobby Wort zusammen
 
-![GameModes.drawio.png](Server/src/main/resources/images/GameModes.drawio.png)
+![GameModes.drawio.png](src/main/resources/images/GameModes.drawio.png)
 
 ### Seiten Aufbau
 

@@ -1,17 +1,23 @@
 package de.dhbwka.java.exercise.packages;
 
 
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 
 @Controller
@@ -57,63 +63,138 @@ public class WebController {
         return "game_";
     }
 
+    private static final Path TEMP_DIR = Paths.get("/tmp/wordle-resources");
+
+    @PostConstruct
+    public void extractResources() {
+        try {
+            // 1. Clean up existing directory if it exists
+            if (Files.exists(TEMP_DIR)) {
+                cleanDirectory(TEMP_DIR);
+            }
+
+            // 2. Create fresh directory structure
+            Files.createDirectories(TEMP_DIR);
+
+            // 3. Extract resources
+            extractResourceFolder("templates");
+            extractResourceFolder("static");
+
+            System.out.println("Successfully extracted resources to: " + TEMP_DIR);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to extract resources", e);
+        }
+    }
+
+    private void cleanDirectory(Path dir) throws IOException {
+        try {
+            Files.walk(dir)
+                    .sorted(Comparator.reverseOrder())
+                    .forEach(this::deleteSilently);
+        } catch (IOException e) {
+            System.err.println("Warning: Partial cleanup of " + dir + " - " + e.getMessage());
+        }
+    }
+
+    private void deleteSilently(Path path) {
+        try {
+            Files.delete(path);
+        } catch (IOException e) {
+            System.err.println("Warning: Could not delete " + path + " - " + e.getMessage());
+        }
+    }
+
+    private void extractResourceFolder(String folderName) throws IOException {
+        Path targetDir = TEMP_DIR.resolve(folderName);
+        Files.createDirectories(targetDir);
+
+        Resource[] resources = new PathMatchingResourcePatternResolver()
+                .getResources("classpath:/" + folderName + "/**");
+
+        for (Resource resource : resources) {
+            if (resource.isReadable()) {
+                String filename = resource.getFilename();
+                if (filename != null && !filename.isEmpty()) {
+                    Path dest = targetDir.resolve(filename);
+                    try (InputStream in = resource.getInputStream()) {
+                        Files.copy(in, dest, StandardCopyOption.REPLACE_EXISTING);
+                    }
+                }
+            }
+        }
+    }
+
     @GetMapping("/create-game/{modi}")
     public ResponseEntity<String> create_game(@PathVariable("modi") String modi) throws IOException {
         String gameId = generateID();
         String lobbytype = "1v1";
         if (modi.equals("team")) {
             lobbytype = "team";
-        }else if(modi.equals("solo")) {
+        } else if (modi.equals("solo")) {
             lobbytype = "solo";
         }
         int subServerPort = 4001 + subservers.size();
-        // Start the sub-server as a separate Node.js process
+
+        String nodeCommand = null; // Initialize to null
 
         try {
-
-            String nodeCommand;
+            // Determine Node.js command based on OS
+            Process whichProcess;
             if (System.getProperty("os.name").toLowerCase().contains("win")) {
-                // Windows
-                log.info("Windows");
-                Process whichProcess = Runtime.getRuntime().exec("where node");
-                whichProcess.waitFor();
-                try (BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(whichProcess.getInputStream()))) {
-                    nodeCommand = reader.readLine();
-                }
+                log.info("Operating System: Windows");
+                whichProcess = Runtime.getRuntime().exec("where node");
             } else {
-                // Linux/Mac
-                Process whichProcess = Runtime.getRuntime().exec("which node");
-                whichProcess.waitFor();
-                try (BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(whichProcess.getInputStream()))) {
-                    nodeCommand = reader.readLine();
-                }
+                log.info("Operating System: Linux/Mac");
+                whichProcess = Runtime.getRuntime().exec("which node");
+            }
+
+            whichProcess.waitFor(); // Wait for the 'which' or 'where' command to complete
+            try (BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(whichProcess.getInputStream()))) {
+                nodeCommand = reader.readLine(); // Read the path to node
             }
 
             if (nodeCommand == null || nodeCommand.isEmpty()) {
-                throw new RuntimeException("Node.js not found in PATH");
+                throw new RuntimeException("Node.js not found in PATH. Please ensure Node.js is installed and accessible.");
             }
 
-            String jsFilePath = new File("src/main/resources/templates/NewSubServer.js").getAbsolutePath();
+            // --- START: Corrected logic for accessing NewSubServer.js from JAR ---
+            // 1. Get the resource from the classpath (this works whether in IDE or JAR)
+            ClassPathResource resource = new ClassPathResource("NewSubServer.js");
+            InputStream inputStream = resource.getInputStream();
+
+            // 2. Create a temporary file on the file system
+            Path tempFile = Files.createTempFile("NewSubServer", ".js");
+            File scriptFile = tempFile.toFile();
+            // Ensure the temporary file is deleted when the JVM exits
+            scriptFile.deleteOnExit();
+
+            // 3. Copy the content from the JAR's input stream to the temporary file
+            Files.copy(inputStream, tempFile, StandardCopyOption.REPLACE_EXISTING);
+            inputStream.close(); // Close the stream from the JAR
+
+            // 4. Get the absolute path of the temporary file for Node.js to execute
+            String jsFilePath = scriptFile.getAbsolutePath();
+            log.info("Subserver: Extracted Node.js script to temporary path: {}", jsFilePath);
+            // --- END: Corrected logic ---
+
             String[] command = {
                     nodeCommand,
-                    jsFilePath,
+                    jsFilePath, // Use the path to the temporary file
                     gameId,
                     String.valueOf(subServerPort),
                     lobbytype
             };
 
-
             ProcessBuilder pb = new ProcessBuilder(command);
-            pb.directory(new File("/"));
-            pb.redirectErrorStream(true);
+            pb.redirectErrorStream(true); // Redirects stderr to stdout for easier logging
 
             log.info("Starting subserver with command: {}", String.join(" ", command));
-
+            pb.environment().put("RESOURCES_PATH", "/tmp/wordle-resources");
+            //pb.directory(new File("/path/to/your/resources")); // Only needed in development
             Process process = pb.start();
 
-            // Step 4: Log output from the subserver
+            // Log output from the subserver in a separate thread
             new Thread(() -> {
                 try (BufferedReader reader = new BufferedReader(
                         new InputStreamReader(process.getInputStream()))) {
@@ -124,30 +205,26 @@ public class WebController {
                 } catch (IOException e) {
                     log.error("Error reading subserver output", e);
                 }
-            }).start();
+            }, "Subserver-Output-Logger-" + gameId).start(); // Give thread a name for easier debugging
 
-            // Step 5: Add shutdown hook to ensure subserver is killed when main app exits
+            // Add shutdown hook to ensure subserver is killed when main app exits
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 if (process.isAlive()) {
                     process.destroy();
-                    log.info("Subserver process terminated");
+                    log.info("Subserver process for game {} terminated", gameId);
                 }
-            }));
-
-            // Step 6: Verify the subserver started successfully
-            // Wait briefly to detect immediate failures
-
+            }, "Subserver-Shutdown-Hook-" + gameId));
 
             log.info("Subserver started successfully on port {}", subServerPort);
 
         } catch (Exception e) {
-            log.error("Failed to start subserver", e);
-            throw new RuntimeException("Could not start subserver", e);
+            log.error("Failed to start subserver for game {}: {}", gameId, e.getMessage(), e);
+            throw new RuntimeException("Could not start subserver for game " + gameId, e);
         }
 
         subservers.put(gameId, new GameLobby(gameId, subServerPort));
-        subservers.get(gameId).joinRequest();
-        //log.info("server {} started on port http://localhost:{}/game",gameId,subServerPort);
+        subservers.get(gameId).joinRequest(); // Assuming this method exists and is safe to call
+        // log.info("server {} started on port http://localhost:{}/game",gameId,subServerPort);
 
         return ResponseEntity.ok(("{\"gameId\" : \"" + gameId + "\" , \"port\" : \"" + subServerPort + "\"}"));
     }
