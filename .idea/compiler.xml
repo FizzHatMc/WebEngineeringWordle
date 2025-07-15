@@ -2,6 +2,9 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
+      <module name="de.dhbwka.java.exercise.packages.Server" target="23" />
+      <module name="de.dhbwka.java.exercise.packages.Server.main" target="23" />
+      <module name="de.dhbwka.java.exercise.packages.Server.test" target="23" />
       <module name="Server" target="23" />
       <module name="Server.main" target="23" />
       <module name="Server.test" target="23" />
@@ -12,6 +15,9 @@
       <module name="Server" options="-parameters" />
       <module name="Server.main" options="-parameters" />
       <module name="Server.test" options="-parameters" />
+      <module name="de.dhbwka.java.exercise.packages.Server" options="-parameters" />
+      <module name="de.dhbwka.java.exercise.packages.Server.main" options="-parameters" />
+      <module name="de.dhbwka.java.exercise.packages.Server.test" options="-parameters" />
     </option>
   </component>
 </project>
