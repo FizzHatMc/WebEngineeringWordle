@@ -21,7 +21,6 @@ const gameData = {
     gameState: -1,
     submittedWords: [[],[]],
     guessCounter: [0,0],
-
 }
 const io = new Server(server, {
     cors: {
@@ -74,10 +73,11 @@ if(lobbytype==="1v1") {
 }
 
 
-function updateAll(boardX, r, guess, guessCounter,playerID) {
-    console.log("BoardID -> " + boardX + " Guess -> " + guess + " GuessCounter -> " + guessCounter)
+function updateAll(r, guess, guessCounter,playerID) {
+    console.log("BoardID -> " + playerID + " Guess -> " + guess + " GuessCounter -> " + guessCounter)
     io.emit('updateAll',  {
-        board: boardX,
+        //board: boardX,
+        playerID: playerID,
         daten: r,
         word: guess,
         tries: guessCounter
@@ -114,7 +114,7 @@ function guess(fetchURL,req,res){
 
         const boardX = gameData.players.indexOf(playerName) + 1
 
-        updateAll(boardX,r,guess,gameData.guessCounter[playerID-1],playerID)
+        updateAll(r,guess,gameData.guessCounter[playerID-1],playerID)
 
         if(gameData.guessCounter[playerID-1]>=6){
             console.log("Done Player " + playerID)
@@ -154,9 +154,11 @@ io.on("connection", (socket) => {
     console.log("Name -> " + getName(originalUrl))
     gameData.players.push(getName(originalUrl))
 
+
     if(connectedClients>1){
         io.emit('playerJoined', {
-            name: getName(originalUrl)
+            namen: gameData.players
+
         })
     }
 

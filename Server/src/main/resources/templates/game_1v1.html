@@ -66,6 +66,7 @@
     const host = window.location.hostname;
     const playerName = new URLSearchParams(window.location.search).get('name'); // Get player name
     const slider = new URLSearchParams(window.location.search).get('daily');
+    let playerID
 
     document.getElementById("link2home").setAttribute("href",`http://${host}:8080`)
 
@@ -79,7 +80,8 @@
     }
 
     socket.on('updateAll', (send) => {
-        updateBoard(send.board,send.daten,send.word,send.tries);
+        updateBoard(send.playerID,send.daten,send.word,send.tries);
+        //send.board,
     })
 
 
@@ -98,13 +100,14 @@
         }
     }
 
-    function updateBoard(boardNum,data,word,tries){
+    function updateBoard(playerID,data,word,test){
         let board;
-        tries--
-        if(boardNum===1){
+        let tries = test
+        console.log("PlayerID send -> " + playerID + " Own ID -> " + this.playerID)
+        if(playerID===this.playerID){
             board = document.getElementById("board1");
 
-        }else if(boardNum===2){
+        }else{
             board = document.getElementById("board2");
         }
 
@@ -175,8 +178,17 @@
     }
 
     socket.on('playerJoined', (send) => {
-        gegnerJoined(send.name);
+        this.playerID = send.namen.indexOf(playerName) + 1
+
+        for(let i=0;i<send.namen.length;i++){
+            if(send.namen[i]!==playerName){
+                gegnerJoined(send.namen[i])
+            }
+        }
+
+
     })
+
 
     function gegnerJoined(gegnername) {
         document.getElementById("guess").style.display = "block";
