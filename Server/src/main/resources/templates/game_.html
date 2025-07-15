@@ -29,7 +29,10 @@
     <!--    <div id="arrayDisplay"></div> Debugzahlen-->
     <input type="text" autocomplete="off" onchange="sendGuessHTTP()" name="guess" id="guess">
     <input id="send-guess" type="button" value="Raten" onclick="sendGuessHTTP()">
-    <p id="gameover" style="display: none">Game Over!</p>
+    <p id="error" style="display: none">Es gab einen Fehler...</p> <!-- Gamestate -1 -->
+    <p id="gameover" style="display: none">Keine Versuche mehr!</p> <!-- Gamestate 0 -->
+    <p id="enemy" style="display: none">Game Over!</p> <!-- Gamestate 1 -->
+    <p id="won" style="display: none">Gewonnen!</p> <!-- Gamestate 2 -->
     <!--    <input type="checkbox" id="dailyCheck">-->
 </div>
 
@@ -152,10 +155,29 @@
         }
     }
 
-    function gameOverScreen(){
+    socket.on('endGame', (send) => {
+        gameOverScreen(send.gameState);
+    })
+
+    function gameOverScreen(endState){
         document.getElementById("guess").style.display = "none";
         document.getElementById("send-guess").style.display = "none";
-        document.getElementById("gameover").style.display = "block";
+        switch (endState){
+            case -1:
+                document.getElementById("error").style.display = "block";
+                break;
+            case 0:
+                document.getElementById("gameover").style.display = "block";
+                break;
+            case 1:
+                document.getElementById("enemy").style.display = "block";
+                break;
+            case 2:
+                document.getElementById("won").style.display = "block";
+                break;
+            default:
+                document.getElementById("error").style.display = "block";
+        }
     }
 
     function copyId(){
