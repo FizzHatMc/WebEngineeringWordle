@@ -139,6 +139,11 @@ Alle Seiten haben ein Simples aber funktionales Design. Wir nutzen haben ein fes
             │   ├── game.html
             │   ...
 ```
+---
+
+## Projekt management
+
+[Projekt Management Dokumentation](PM_merged.pdf)
 
 ---
 <a name="Team"></a>
