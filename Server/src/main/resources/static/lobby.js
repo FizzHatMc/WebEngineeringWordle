@@ -16,12 +16,12 @@ function joinGame(){
     }
 
     if (!playerName) {
-        showError('No name ¯\\_(ツ)_/¯');
+        showError('Kein Name ¯\\_(ツ)_/¯');
         document.getElementById("name-input").style.display = "block";
         return;
     }
     if (!gameId) {
-        showError('Please enter a Game ID.');
+        showError('Bitte eine Game ID angeben.');
         return;
     }
     fetch(`/join-game?id=${gameId}`)
@@ -38,7 +38,7 @@ function joinGame(){
         })
         .catch(error => {
             console.error('Error joining game:', error);
-            showError('An error occurred. Please check your network connection.');
+            showError('Es ist ein Fehler aufgetreten. Bitte Verbindung überprüfen.');
         });
 }
 
@@ -85,7 +85,7 @@ function createGame(){
     const playerName = nameInput.value.trim();
     modus = document.querySelector('input[name = "modus"]:checked').value;
     if (!playerName) {
-        showError('Please enter your name.');
+        showError('Bitte einen Namen angeben.');
         return;
     }
     console.log(modus);
@@ -95,19 +95,19 @@ function createGame(){
             if (data.gameId && data.port) {
                 navigateToGame(data.gameId, data.port, playerName);
             } else {
-                showError('Failed to create game. Please try again.');
+                showError('Es konnte kein Spiel erstellt werden. Bitte nochmal versuchen.');
             }
         })
         .catch(error => {
             console.error('Error creating game:', error);
-            showError('An error occurred. Please check your network connection.');
+            showError('Es ist ein Fehler aufgetreten. Bitte Verbindung überprüfen.');
         });
 }
 
 function route2joinGame() {
     const playerName = nameInput.value.trim();
     if (!playerName) {
-        showError('Please enter your name.');
+        showError('Bitte einen Namen angeben.');
         return;
     }
     document.location=('/spielbeitritt?name=' + encodeURIComponent(playerName));

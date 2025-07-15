@@ -43,12 +43,11 @@
                 if (data.gameId && data.port) {
                     navigateToGame(data.gameId, data.port, playerName);
                 } else {
-                    showError('Failed to create game. Please try again.');
+                    console.log('Failed to create game. Please try again.');
                 }
             })
             .catch(error => {
                 console.error('Error creating game:', error);
-                showError('An error occurred. Please check your network connection.');
             });
     }
 </script>
