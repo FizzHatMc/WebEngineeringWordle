@@ -143,7 +143,7 @@ Alle Seiten haben ein Simples aber funktionales Design. Wir nutzen haben ein fes
 
 ## Projekt management
 
-[Projekt Management Dokumentation](PM_merged.pdf)
+[Projekt Management Dokumentation](/pm/PM_merged.pdf)
 
 ---
 <a name="Team"></a>
