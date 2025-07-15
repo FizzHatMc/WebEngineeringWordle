@@ -98,11 +98,24 @@ Um Multiplayer Wordle lokal einzurichten und zu starten:
 
 ### Aufbau der Server und Websiten
 
+Die Homepage (home.html) ist die startseite, auf der das Impressum (impressum.html) ist und das Spiel gestartet werden kann. Es wird daraufhin entweder zur Lobby (lobby.html) weitergeleitet oder direkt in ein Spiel (game_.html / game_1v1.html). 
+Wenn der Spieler auf der Lobby website ein Spiel startet, wird er darauf hin auch zu einem Game (game_.html / game_1v1.html) weitergeleitet.
+Es kann von jeder Website (bis auf Homepage) auf die "Wordle Online" schrift gedrückt werden um auf die Homepage zurückzukommen.
+
 ![UbersichtDiagramm.drawio.png](Server/src/main/resources/images/UbersichtDiagramm.drawio.png)
 
 ### Spielmodis
 
+Es existieren technisch 3 Modis. </br>
+- **Solo** - Spieler spielt alleine und errät das tägliche Wort
+- **1v1** - Zwei Spieler spielen gegeneinander. Der erste der das Tägliche oder sein eigenes Wort errät, gewinnt.
+- **Team** - Zwei Spieler erraten das Tägliche oder Lobby Wort zusammen
+
 ![GameModes.drawio.png](Server/src/main/resources/images/GameModes.drawio.png)
+
+### Seiten Aufbau
+
+Alle Seiten haben ein Simples aber funktionales Design. Wir nutzen haben ein festes Impressum im "Fuß" der seite. 
 
 ---
 <a name="Projekt-aufbau"></a>
