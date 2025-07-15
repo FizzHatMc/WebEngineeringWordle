@@ -112,10 +112,10 @@ function guess(fetchURL,req,res){
 
     fetch(fetchURL + guess + "/" + correctWord).then(response => response.json()).then(r  => {
         if(r.toString().replaceAll(" ","") === "3,3,3,3,3"){
-            gameData.gameOver = 1
-            res.send({
+            gameData.gameState = 2
+            io.emit('endGame', {
                 gameState: gameData.gameState,
-                playerName: playerName
+                playerID: playerID
             });
         }
 
@@ -127,10 +127,10 @@ function guess(fetchURL,req,res){
 
         if(gameData.guessCounter[playerID-1]>=6 || gameData.globalCounter >= 6){
             console.log("Done Player " + playerID)
-            gameData.gameState=0
-            res.send({
-                gameOver: gameData.gameState,
-                playerName: playerName
+            gameData.gameState = 0
+            io.emit('endGame', {
+                gameState: gameData.gameState,
+                playerID: playerID
             });
 
         }

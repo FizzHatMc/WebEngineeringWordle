@@ -17,9 +17,11 @@ const host = window.location.hostname;
 const playerName = new URLSearchParams(window.location.search).get('name'); // Get player name
 const slider = new URLSearchParams(window.location.search).get('daily');
 let playerID;
+
 document.getElementById("link2home").setAttribute("href",`http://${host}:8080`);
 document.getElementById("homelink").setAttribute("href",`http://${host}:8080`);
 document.getElementById("impressumlink").setAttribute("href",`http://${host}:8080/impressum`);
+
 
 for (let i = 0; i < rows; i++) {
     colorArray[i] = []; // Erstelle eine neue Zeile (inneres Array)
@@ -123,7 +125,12 @@ function sendGuessHTTP() {
 }
 
 socket.on('endGame', (send) => {
-    gameOverScreen(send.gameState);
+
+    if(this.playerID!==send.playerID){
+        gameOverScreen(1);
+    }else{
+        gameOverScreen(send.gameState);
+    }
 })
 
 function gameOverScreen(endState){
