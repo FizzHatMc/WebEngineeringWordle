@@ -12,17 +12,17 @@ Willkommen bei Multiplayer Wordle! Dies ist eine unterhaltsame Echtzeit-Adaption
 ---
 
 ## Inhaltsverzeichnis
-* [🎮 Gameplay](#Gameplay)
-* [🛠️ Aufbau](#Aufbau)
-* [📸 Screenshots](#Screenshots)
+* [🎮 Gameplay](#gameplay)
+* [🛠️ Aufbau](#aufbau)
+* [📸 Screenshots](#screenshots)
 * [💥 Highlights](#aufbau)
 * [💡 Funktionsweise](#funktionsweise)
 * [🚀 Schnelleinstieg](#schnelleinstieg)
-* [📝 Technische Dokumentation](#Technische Dokumentation)
-* [🗂️ Projekt Aufbau](#Projekt Aufbau)
+* [📝 Technische Dokumentation](#technische-dokumentation)
+* [🗂️ Projekt Aufbau](#projekt-aufbau)
 
 ---
-
+<a name="Gameplay"/>
 ## 🎮 Gameplay
 
 Multiplayer Wordle bringt das klassische Wortratespiel in eine dynamische Mehrspielerumgebung. Es gibt die möglichkeit das Tägliche Wort zu erraten was alle 24 Stunden sich ändert. Oder beim starten des spiels ein einzigartiges Wort zu haben. Beim erraten des Wortes werden die buchstaben in folgenden Farben angezeigt:
