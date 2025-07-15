@@ -63,8 +63,13 @@ Um Multiplayer Wordle lokal einzurichten und zu starten:
     ```
 2.  **Ausführen mit Java 23 installiert:**
     ```bash
-    java -jar /pfad/zu/date/wordle.jar
+    path/to/java_Installation -jar /pfad/zu/date/wordle.jar
     ```
 3.  Öffne deinen Browser und navigiere zu `http://localhost:8080`.
+
+--
+
+## 🚀 Technische Dokumentation
+
 
 
