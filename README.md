@@ -1,25 +1,87 @@
-### WebEngineeringWordle
+# Multiplayer Wordle
 
+---
 
->Immer commiten und Pushed
+Welcome to Multiplayer Wordle! This is a fun, real-time adaptation of the popular word puzzle game, designed for you and your friends to enjoy together. Challenge each other to guess the secret word within a limited number of tries, with live updates on everyone's progress.
 
-## Aufbau
-HTML Side aufgabe:
+---
 
-- Anzeigen der 5 Eingabe Felder
-- Anzeigen der Versuchen mit Farben
-- Farben Logik
-- Menü und Visuelle Aufwertung
-- Anzeigen des gesuchten Wortes am Ende einer Runde (muss vom Server angefragt werden)
-- Anzeigen von Sieg oder Niederlage
-- Seite für "Reset" vom Wort
+## Inhaltsverzeichnis
+* [🎮 Gameplay](#gameplay)
+* [🛠️ Aufbau](#aufbau)
+* [💡 Funktionsweise](#funktionsweise)
+* [🚀 Schnelleinstieg](#schnelleinstieg)
+* [🤝 Mitwirken](#mitwirken)
+* [📜 Lizenz](#lizenz)
 
-Server Side aufgabe:
+---
 
-- Zufälliges Wort auswählen (1x Täglich + Reset knopf) aus Liste
-- Annahme des Eingebenen Wortes von der HTML Seite
-- Vergleichen und buchstaben "einranken" (1-3; (0 = Default), 1 = Nicht dabei, 2 = Dabei aber falsche Position, 3 = Dabei und richtige Position)
-- Array an HTML zurück schicken um die Farben logik zu verarbeiten
-- Mapping von verschiedenen Adressen / Links
-- Authentifizierung von Usern.
-- (Kommunikation mit NodeJS-Server für Multiplayer Sessions)
+## 🎮 Gameplay
+
+Multiplayer Wordle brings the classic word-guessing game into a dynamic multiplayer environment. Each round, a secret five-letter word is chosen. Players take turns guessing the word, receiving immediate feedback on their letters:
+
+* 🟩 **Grün:** Der Buchstabe ist korrekt und an der richtigen Position.
+* 🟨 **Gelb:** Der Buchstabe ist korrekt, aber an der falschen Position.
+* ⬜ **Grau:** Der Buchstabe ist nicht im Wort enthalten.
+
+The game tracks each player's progress individually, and the first one to guess the word wins the round!
+
+---
+
+## 🛠️ Aufbau
+
+Dieses Projekt ist in mehreren Schlüsselkomponenten organisiert:
+
+* **Frontend:** Entwickelt mit [Dein Frontend-Framework, z.B. React, Vue, Angular] für eine interaktive Benutzeroberfläche.
+* **Backend:** Realisiert mit [Dein Backend-Framework/Sprache, z.B. Node.js mit Express, Python mit Flask/Django] zur Verwaltung der Spiel-Logik, der Benutzerzustände und der Kommunikation.
+* **WebSockets:** Verwendet [Deine WebSocket-Bibliothek, z.B. Socket.IO] für die Echtzeitkommunikation zwischen Server und Clients, um ein nahtloses Multiplayer-Erlebnis zu gewährleisten.
+* **Datenbank (Optional):** [Dein Datenbanksystem, z.B. MongoDB, PostgreSQL] für persistente Daten wie Spielerstatistiken oder Highscores.
+
+---
+
+## 💡 Funktionsweise
+
+Das Spiel funktioniert wie folgt:
+
+1.  **Spielerbeitritt:** Benutzer können über einen eindeutigen Link oder eine Spiel-ID einem Raum beitreten oder einen neuen erstellen.
+2.  **Wortauswahl:** Der Server wählt ein zufälliges fünfstelliges Wort aus seiner Datenbank.
+3.  **Raten:** Spieler geben ihre Vermutungen ein. Jede Vermutung wird an den Server gesendet, der sie validiert und das Ergebnis (grün/gelb/grau) an alle Spieler im Raum zurücksendet.
+4.  **Echtzeit-Updates:** Dank WebSockets sehen alle Spieler in Echtzeit, welche Buchstaben die anderen Spieler bereits geraten haben und wie nahe sie der Lösung sind (ohne die genauen Wörter der anderen preiszugeben, es sei denn, sie wurden korrekt geraten).
+5.  **Rundenende:** Die Runde endet, wenn ein Spieler das Wort errät oder alle Spieler ihre maximalen Versuche ausgeschöpft haben. Der Gewinner wird bekannt gegeben, und eine neue Runde kann gestartet werden.
+
+---
+
+## 🚀 Schnelleinstieg
+
+Um Multiplayer Wordle lokal einzurichten und zu starten:
+
+1.  **Repository klonen:**
+    ```bash
+    git clone [https://github.com/](https://github.com/)[DeinBenutzername]/[DeinRepoName].git
+    cd [DeinRepoName]
+    ```
+2.  **Frontend installieren & starten:**
+    ```bash
+    cd frontend
+    npm install # oder yarn install
+    npm start # oder yarn start
+    ```
+3.  **Backend installieren & starten:**
+    ```bash
+    cd ../backend
+    npm install # oder yarn install
+    npm start # oder yarn start
+    ```
+4.  Öffne deinen Browser und navigiere zu `http://localhost:[DeinFrontendPort]` (Standard ist oft 3000).
+
+---
+
+## 🤝 Mitwirken
+
+Wir freuen uns über Beiträge! Wenn du Bugs findest oder neue Funktionen vorschlagen möchtest, öffne bitte ein Issue oder sende einen Pull Request. Bitte beachte unsere [Contributing Guidelines](CONTRIBUTING.md) (falls vorhanden).
+
+---
+
+## 📜 Lizenz
+
+Dieses Projekt steht unter der [Name der Lizenz, z.B. MIT License]. Siehe die Datei [LICENSE](LICENSE) für weitere Details.
