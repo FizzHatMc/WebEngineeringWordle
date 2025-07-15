@@ -44,14 +44,16 @@ Dieses Projekt ist in mehreren Schlüsselkomponenten organisiert:
 * **Frontend:** Entwickelt mit vanilla HTML/CSS und Javascript für eine interaktive Benutzeroberfläche.
 * **Backend:** Realisiert mit Java Spring boot (Kontroll Server) und NodeJS (Lobby Server) zur Verwaltung der Spiellogik, der Benutzerzustände und der Spieler logik.
 * **WebSockets:** Verwendet SocketIO für die Echtzeitkommunikation zwischen Server und Clients, um ein nahtloses Multiplayer-Erlebnis zu gewährleisten.
-* **"Datenbank"** Wir nutzen eine Simple aber Funktionale Text datei für die verfügbaren Wörter.
+* **"Datenbank":** Wir nutzen eine simple aber funktionale Text datei für die verfügbaren Wörter.
 
 ---
 <a name="Screenshots"></a>
 ## 📸 Screenshots
 
-![HomePage.png](Server/src/main/resources/images/HomePage.png)
-![Lobby.png](Server/src/main/resources/images/Lobby.png)
+
+<img src="Server/src/main/resources/images/HomePage.png" width="620" alt="Lobby">
+<img src="Server/src/main/resources/images/Lobby.png" width="620" alt="Lobby">
+
 
 ---
 <a name="Highlights"></a>
