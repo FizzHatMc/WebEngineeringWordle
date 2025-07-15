@@ -51,8 +51,8 @@ Dieses Projekt ist in mehreren Schlüsselkomponenten organisiert:
 ## 📸 Screenshots
 
 
-<img src="Server/src/main/resources/images/HomePage.png" width="620" alt="Lobby">
-<img src="Server/src/main/resources/images/Lobby.png" width="620" alt="Lobby">
+<img src="Server/src/main/resources/images/HomePage.png" width="840" alt="Lobby">
+<img src="Server/src/main/resources/images/Lobby.png" width="840" alt="Lobby">
 
 
 ---
