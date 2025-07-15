@@ -183,11 +183,6 @@ public class WebController {
 
     }
 
-    @GetMapping("/login")
-    public String login() {
-        return "login";
-    }
-
     @CrossOrigin(origins = "*")
     @GetMapping("/try/{word}")
     @ResponseBody

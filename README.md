@@ -1,18 +1,25 @@
 # Multiplayer Wordle
-
+[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Java Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring&logoColor=white)](https://spring.io/projects/spring-boot/)
+[![Socket.IO](https://img.shields.io/badge/Socket.IO-010101?style=for-the-badge&logo=socket.io&logoColor=white)](https://socket.io/)
+[![Gradle](https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white)](https://gradle.org/)
 ---
 
+
 Willkommen bei Multiplayer Wordle! Dies ist eine unterhaltsame Echtzeit-Adaption des beliebten Worträtselspiels, das für dich und deine Freunde entwickelt wurde, um es gemeinsam zu genießen. Fordert euch gegenseitig heraus, das geheime Wort innerhalb einer begrenzten Anzahl von Versuchen zu erraten, mit Live-Updates über den Fortschritt jedes Spielers.
+
 
 ---
 
 ## Inhaltsverzeichnis
-* [🎮 Gameplay](#gameplay)
-* [🛠️ Aufbau](#aufbau)
+* [🎮 Gameplay](#Gameplay)
+* [🛠️ Aufbau](#Aufbau)
+* [📸 Screenshots](#Screenshots)
+* [💥 Highlights](#aufbau)
 * [💡 Funktionsweise](#funktionsweise)
 * [🚀 Schnelleinstieg](#schnelleinstieg)
-* [🤝 Mitwirken](#mitwirken)
-* [📜 Lizenz](#lizenz)
+* [📝 Technische Dokumentation](#Technische Dokumentation)
+* [🗂️ Projekt Aufbau](#Projekt Aufbau)
 
 ---
 
@@ -41,12 +48,27 @@ Dieses Projekt ist in mehreren Schlüsselkomponenten organisiert:
 
 ---
 
+## 📸 Screenshots
+
+![HomePage.png](Server/src/main/resources/images/HomePage.png)
+![Lobby.png](Server/src/main/resources/images/Lobby.png)
+
+---
+
+## 💥 Highlights
+
+* **Mehrspieler Support** - Lobby bassierter Mehrspieler
+* **Echtzeit Gameplay** - Versuche werden in echtzeit an Mitspieler weiter geleitet
+* **Simples Design** - übersichtliches Design mit einfachen Farben und guter Lesbarkeit
+
+---
+
 ## 💡 Funktionsweise
 
 Das Spiel funktioniert wie folgt:
 
-1.  **Spielerbeitritt:** Benutzer können über eine Spiel-ID einem Raum beitreten oder einen neuen erstellen. Andernseits kann auch eine Einzelspieler Lobby gestartet werden
-2.  **Wortauswahl:** Der Server wählt ein zufälliges fünfstelliges Wort aus den vorgegebenen Wörter.
+1.  **Spielerbeitritt:** Benutzer können über eine Spiel-ID einem Raum beitreten oder einen neuen erstellen. Andernseits kann auch eine Einzelspieler Lobby gestartet werden 
+2.  **Wortauswahl:** Der Server wählt ein zufälliges fünfstelliges Wort aus den vorgegebenen Wörter. 
 3.  **Raten:** Spieler geben ihre Vermutungen ein. Jede Vermutung wird an den Server gesendet, der sie validiert und das Ergebnis (grün/gelb/grau) an alle Spieler im Raum zurücksendet.
 4.  **Echtzeit-Updates:** Dank SocketIO sehen alle Spieler in Echtzeit, welche Buchstaben die anderen Spieler bereits geraten haben und wie nahe sie der Lösung sind (ohne die genauen Wörter der anderen preiszugeben, es sei denn, sie wurden korrekt geraten).
 5.  **Rundenende:** Die Runde endet, wenn ein Spieler das Wort errät oder alle Spieler ihre maximalen Versuche ausgeschöpft haben. Der Gewinner wird bekannt gegeben.
@@ -66,10 +88,43 @@ Um Multiplayer Wordle lokal einzurichten und zu starten:
     path/to/java_Installation -jar /pfad/zu/date/wordle.jar
     ```
 3.  Öffne deinen Browser und navigiere zu `http://localhost:8080`.
+4. Hab Spaß!
 
---
+---
 
-## 🚀 Technische Dokumentation
+## 📝 Technische Dokumentation
 
+### Aufbau der Server und Websiten
 
+![UbersichtDiagramm.drawio.png](Server/src/main/resources/images/UbersichtDiagramm.drawio.png)
 
+### Spielmodis
+
+![GameModes.drawio.png](Server/src/main/resources/images/GameModes.drawio.png)
+
+---
+
+## 🗂️ Projekt Aufbau
+```
+- Multiplayer Wordle
+├── /PM
+│   ├── AblaufplanFolie.pf
+│   ...
+├── /gradle
+├── /src/main
+        ├── /java/de/dhbwka/java/exercise/packages
+        ├── /resources
+            ├── images
+            │   ├── Lobby.png
+            │   ...
+            ├──static
+            │   ├── game.css
+            │   ...
+            ├──templates
+            │   ├── game.html
+            │   ...
+```
+
+---
+
+Entwickelt von Jonas, Jonatha, Kilian und Marcel
