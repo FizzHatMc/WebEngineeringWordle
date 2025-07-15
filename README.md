@@ -12,17 +12,17 @@ Willkommen bei Multiplayer Wordle! Dies ist eine unterhaltsame Echtzeit-Adaption
 ---
 
 ## Inhaltsverzeichnis
-* [🎮 Gameplay](#gameplay)
-* [🛠️ Aufbau](#aufbau)
-* [📸 Screenshots](#screenshots)
-* [💥 Highlights](#aufbau)
-* [💡 Funktionsweise](#funktionsweise)
-* [🚀 Schnelleinstieg](#schnelleinstieg)
-* [📝 Technische Dokumentation](#technische-dokumentation)
-* [🗂️ Projekt Aufbau](#projekt-aufbau)
+* [🎮 Gameplay](#Gameplay)
+* [🛠️ Aufbau](#Aufbau)
+* [📸 Screenshots](#Screenshots)
+* [💥 Highlights](#Highlights)
+* [💡 Funktionsweise](#Funktionsweise)
+* [🚀 Schnelleinstieg](#Schnelleinstieg)
+* [📝 Technische Dokumentation](#Technische-dokumentation)
+* [🗂️ Projekt Aufbau](#Projekt-aufbau)
 
 ---
-
+<a name="Gameplay"></a>
 ## 🎮 Gameplay
 
 Multiplayer Wordle bringt das klassische Wortratespiel in eine dynamische Mehrspielerumgebung. Es gibt die möglichkeit das Tägliche Wort zu erraten was alle 24 Stunden sich ändert. Oder beim starten des spiels ein einzigartiges Wort zu haben. Beim erraten des Wortes werden die buchstaben in folgenden Farben angezeigt:
@@ -36,7 +36,7 @@ In dem "1v1" Modus spielt man gegen einen anderen Nutzer spielt. Der der als ers
 Oder man spielt im "Team" modus miteinander um das wort zu erraten.
 
 ---
-
+<a name="Aufbau"></a>
 ## 🛠️ Aufbau
 
 Dieses Projekt ist in mehreren Schlüsselkomponenten organisiert:
@@ -47,14 +47,14 @@ Dieses Projekt ist in mehreren Schlüsselkomponenten organisiert:
 * **"Datenbank"** Wir nutzen eine Simple aber Funktionale Text datei für die verfügbaren Wörter.
 
 ---
-
+<a name="Screenshots"></a>
 ## 📸 Screenshots
 
 ![HomePage.png](Server/src/main/resources/images/HomePage.png)
 ![Lobby.png](Server/src/main/resources/images/Lobby.png)
 
 ---
-
+<a name="Highlights"></a>
 ## 💥 Highlights
 
 * **Mehrspieler Support** - Lobby bassierter Mehrspieler
@@ -62,7 +62,7 @@ Dieses Projekt ist in mehreren Schlüsselkomponenten organisiert:
 * **Simples Design** - übersichtliches Design mit einfachen Farben und guter Lesbarkeit
 
 ---
-
+<a name="Funktionsweise"></a>
 ## 💡 Funktionsweise
 
 Das Spiel funktioniert wie folgt:
@@ -74,7 +74,7 @@ Das Spiel funktioniert wie folgt:
 5.  **Rundenende:** Die Runde endet, wenn ein Spieler das Wort errät oder alle Spieler ihre maximalen Versuche ausgeschöpft haben. Der Gewinner wird bekannt gegeben.
 
 ---
-
+<a name="Schnelleinstieg"></a>
 ## 🚀 Schnelleinstieg
 
 Um Multiplayer Wordle lokal einzurichten und zu starten:
@@ -91,7 +91,7 @@ Um Multiplayer Wordle lokal einzurichten und zu starten:
 4. Hab Spaß!
 
 ---
-
+<a name="Technische-dokumentation"></a>
 ## 📝 Technische Dokumentation
 
 ### Aufbau der Server und Websiten
@@ -103,7 +103,7 @@ Um Multiplayer Wordle lokal einzurichten und zu starten:
 ![GameModes.drawio.png](Server/src/main/resources/images/GameModes.drawio.png)
 
 ---
-
+<a name="Projekt-aufbau"></a>
 ## 🗂️ Projekt Aufbau
 ```
 - Multiplayer Wordle
@@ -126,5 +126,5 @@ Um Multiplayer Wordle lokal einzurichten und zu starten:
 ```
 
 ---
-
+<a name="Team"></a>
 Entwickelt von Jonas, Jonatha, Kilian und Marcel
