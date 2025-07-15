@@ -11,9 +11,8 @@ const server = http.createServer(app);
 const id = process.argv[2] || 1;
 const PORT = parseInt(process.argv[3], 10) || 4000;
 const lobbytype = process.argv[4];
-console.log("Lobby -> " + lobbytype)
 
-const map = new Map();
+
 const gameData = {
     players: [],
     word: "",
@@ -21,6 +20,7 @@ const gameData = {
     gameState: -1,
     submittedWords: [[],[]],
     guessCounter: [0,0],
+    globalCounter: 0
 }
 const io = new Server(server, {
     cors: {
@@ -74,7 +74,7 @@ if(lobbytype==="1v1") {
 
 
 function updateAll(r, guess, guessCounter,playerID) {
-    console.log("BoardID -> " + playerID + " Guess -> " + guess + " GuessCounter -> " + guessCounter)
+    console.log("BoardID -> " + playerID + " Guess -> " + guess + " GuessCounter -> " + guessCounter + " r -> " + r)
     io.emit('updateAll',  {
         //board: boardX,
         playerID: playerID,
@@ -83,7 +83,12 @@ function updateAll(r, guess, guessCounter,playerID) {
         tries: guessCounter
 
     });
-    gameData.guessCounter[playerID-1]++
+
+    if(lobbytype==="team" || lobbytype==="solo"){
+        gameData.globalCounter++
+    }else if(lobbytype==="1v1"){
+        gameData.guessCounter[playerID-1]++
+    }
 
 }
 
@@ -95,12 +100,18 @@ function guess(fetchURL,req,res){
 
     insertGuess(playerName,guess)
     let correctWord
-    if(playerID === 1){
+
+    if(lobbytype==="1v1"){
+        if(playerID === 1){
+            correctWord = gameData.word
+        }else {
+            correctWord = gameData.word2
+        }
+    }else{
         correctWord = gameData.word
-    }else {
-        correctWord = gameData.word2
     }
 
+    console.log("Fetch : (url, guess, correctWord)" + fetchURL + " " +  guess + " " + correctWord)
     fetch(fetchURL + guess + "/" + correctWord).then(response => response.json()).then(r  => {
         if(r.toString().replaceAll(" ","") === "3,3,3,3,3"){
             gameData.gameOver = 1
@@ -110,13 +121,13 @@ function guess(fetchURL,req,res){
             });
         }
 
+        if(lobbytype==="team" || lobbytype==="solo"){
+            updateAll(r,guess,gameData.globalCounter,playerID)
+        }else if(lobbytype==="1v1" ){
+            updateAll(r,guess,gameData.guessCounter[playerID-1],playerID)
+        }
 
-
-        const boardX = gameData.players.indexOf(playerName) + 1
-
-        updateAll(r,guess,gameData.guessCounter[playerID-1],playerID)
-
-        if(gameData.guessCounter[playerID-1]>=6){
+        if(gameData.guessCounter[playerID-1]>=6 || gameData.globalCounter >= 6){
             console.log("Done Player " + playerID)
             gameData.gameState=0
             res.send({

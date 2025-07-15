@@ -111,6 +111,7 @@
 
     function sendGuessHTTP() {
         word = document.getElementById("guess").value;
+        console.log("Word -> " + word)
         if(word.length!==5) return;
         document.getElementById("guess").value = "";
         if(slider){
