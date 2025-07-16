@@ -146,6 +146,18 @@ Alle Seiten haben ein Simples aber funktionales Design. Wir nutzen haben ein fes
 [Projekt Management Dokumentation](/pm/PM_merged.pdf)
 
 ---
+
+## Zukunft des Projektes
+
+* Design Überarbeitung (Modernisieren und verbessertes Mobile Design) möglicherweiße mit Framework
+* Datenbank anbindung für die Wörter
+* Live Hosten auf Server
+* Lobby Anzeige um leicht beitreten zu können
+* Spieler Chat
+* Punkte system mit Schnellster / Bester spieler jemals (benötigt Live Hosting)
+  
+
+---
 <a name="Team"></a>
 ## Das Team
 
