@@ -102,7 +102,7 @@ Um Multiplayer Wordle lokal einzurichten und zu starten:
 ---
 <a name="Technische-dokumentation"></a>
 ## 📝 Technische Dokumentation
-
+> Das ganze Dokumment ist teil der Technischen Dokumentation
 ### Aufbau der Server und Websiten
 
 Die Homepage (home.html) ist die startseite, auf der das Impressum (impressum.html) ist und das Spiel gestartet werden kann. Es wird daraufhin entweder zur Lobby (lobby.html) weitergeleitet oder direkt in ein Spiel (game_.html / game_1v1.html). 
@@ -162,6 +162,7 @@ Alle Seiten haben ein Simples aber funktionales Design. Wir nutzen haben ein fes
 * Lobby Anzeige um leicht beitreten zu können
 * Spieler Chat
 * Punkte system mit Schnellster / Bester spieler jemals (benötigt Live Hosting)
+* Aufräumen des Projektes
   
 
 ---
