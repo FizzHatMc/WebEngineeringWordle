@@ -159,7 +159,7 @@ button:hover {
     color: #D5FFF3;
 }
 
-#gameover {
+#gameover, #error, #enemy, #won {
     font-size: x-large;
     color: #672A4E;
 }
