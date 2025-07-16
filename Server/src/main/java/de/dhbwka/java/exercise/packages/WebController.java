@@ -203,8 +203,8 @@ public class WebController {
         if (word.length() == 5) {
             int[] colors = new int[5];
             int[] rest;
-            StringBuilder restWort = new StringBuilder();
-            StringBuilder restCorrect = new StringBuilder();
+            String restWort = "";
+            String restCorrect = "";
             ArrayList<Integer> restIndexList = new ArrayList<>();
             for (int i = 0; i < 5; i++) {
                 String currentLetter = String.valueOf(word.toLowerCase().charAt(i));
@@ -213,17 +213,19 @@ public class WebController {
                         colors[i] = 3;
                     } else {
                         restIndexList.add(i);
-                        restWort.append(currentLetter);
-                        restCorrect.append(correctWord.toLowerCase().charAt(i));
+                        restWort += currentLetter;
+                        restCorrect += String.valueOf(correctWord.toLowerCase().charAt(i));
                     }
                 } else {
                     colors[i] = 1;
                 }
             }
             rest = restIndexList.stream().mapToInt(i -> i).toArray();
+            System.out.println(restWort);
+            System.out.println(restCorrect);
             for (int i = 0; i < restCorrect.length(); i++) {
                 char curr = word.toLowerCase().charAt(i);
-                if (instancesOfChar(restWort.substring(0, i+1), curr) > instancesOfChar(restCorrect.toString(), curr)) {
+                if (instancesOfChar(restWort.substring(0, i+1), curr) > instancesOfChar(restCorrect, curr)) {
                     colors[rest[i]] = 1;
                 } else {
                     colors[rest[i]] = 2;
@@ -240,6 +242,7 @@ public class WebController {
         for (int i = 0; i < wort.length(); i++) {
             if (wort.charAt(i) == character) x++;
         }
+        System.out.println(character+" "+x+" mal in "+wort);
         return x;
     }
 }
