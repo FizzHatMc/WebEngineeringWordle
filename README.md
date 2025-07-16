@@ -80,7 +80,13 @@ Das Spiel funktioniert wie folgt:
 ## 🚀 Schnelleinstieg
 
 Um Multiplayer Wordle lokal einzurichten und zu starten:
+1. **Repo Main branch clonen**
+2. **In beliebiger IDE importieren**
+3. **Start.java ausführen**
+4. **Öffne deinen Browser und navigiere zu `http://localhost:8080`.**
+5. **Hab Spaß!**
 
+(Noch nicht 100% Funktionel){
 1.  **Jar runterladen:**
     ```bash
     https://github.com/FizzHatMc/WebEngineeringWordle/releases
@@ -89,8 +95,9 @@ Um Multiplayer Wordle lokal einzurichten und zu starten:
     ```bash
     path/to/java_Installation -jar /pfad/zu/date/wordle.jar
     ```
-3.  Öffne deinen Browser und navigiere zu `http://localhost:8080`.
-4. Hab Spaß!
+3.  **Öffne deinen Browser und navigiere zu `http://localhost:8080`.**
+4.  **Hab Spaß!**
+}
 
 ---
 <a name="Technische-dokumentation"></a>
