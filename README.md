@@ -53,6 +53,7 @@ Dieses Projekt ist in mehreren Schlüsselkomponenten organisiert:
 
 <img src="Server/src/main/resources/images/HomePage.png" width="840" alt="Lobby">
 <img src="Server/src/main/resources/images/Lobby.png" width="840" alt="Lobby">
+<img src="Server/src/main/resources/images/Mobile.png" width="840" alt="Lobby">
 
 
 ---
